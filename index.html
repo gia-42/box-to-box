@@ -32,6 +32,13 @@ html,body{height:100%}
 body{background:radial-gradient(120% 55% at 50% -12%, rgba(255,205,130,.13), transparent 62%) no-repeat, var(--bg);color:var(--fg);font-family:var(--ui);-webkit-font-smoothing:antialiased}
 #app{max-width:440px;margin:0 auto;min-height:100%;padding-inline:16px;display:flex;flex-direction:column}
 #app{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+/* no page wider/taller than the screen unless it has content to scroll; no rubber-band bounce */
+html,body{margin:0;overscroll-behavior:none}
+#app,.screen{box-sizing:border-box}
+/* bottom menu always in reach */
+.nav{position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:20;margin:0!important;background:rgba(19,28,25,.94);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.screen:has(> .nav){padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+.screen:has(> .nav) > .spacer:last-of-type{min-height:0}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .screen{flex:1;display:flex;flex-direction:column;padding-block:12px 18px;min-height:100%}
@@ -658,6 +665,56 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .crow.sub span{color:var(--fg);font:800 15px var(--display);text-transform:uppercase;letter-spacing:.03em}
 .crow .cm{display:grid;place-items:center}
 .crow .cm svg{width:28px;height:auto;max-height:34px}
+/* ---------- VAR identity: broadcast monitor + console ---------- */
+.photo svg[viewBox="0 0 100 84"]{width:90%;max-height:90%}
+.vg-frame{position:absolute;inset:0;pointer-events:none;z-index:2}
+.vg-frame i{position:absolute;width:26px;height:26px;border:3px solid rgba(255,255,255,.85);filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.vg-frame i:nth-child(1){left:14px;top:64px;border-right:0;border-bottom:0}
+.vg-frame i:nth-child(2){right:14px;top:64px;border-left:0;border-bottom:0}
+.vg-frame i:nth-child(3){left:14px;bottom:250px;border-right:0;border-top:0}
+.vg-frame i:nth-child(4){right:14px;bottom:250px;border-left:0;border-top:0}
+.vg-rec{position:absolute;left:50%;top:70px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;background:rgba(10,14,12,.72);color:#fff;font:800 11px var(--ui);letter-spacing:.14em;padding:5px 10px 5px 8px;border-radius:4px;border-left:3px solid var(--c5)}
+.vg-rec b{width:8px;height:8px;border-radius:50%;background:#FF3B30;animation:recB 1.2s steps(1) infinite}
+@keyframes recB{50%{opacity:.2}}
+.vg.m-map .vg-frame,.vg.revealing .vg-frame{opacity:0}
+.vg-frame{transition:opacity .3s}
+.vi-card{transform:none!important;border:2px solid var(--c5)!important;border-radius:14px!important;position:relative;box-shadow:0 0 0 6px rgba(58,155,240,.12),0 24px 50px rgba(0,0,0,.55)!important;animation:viIn2 .6s cubic-bezier(.2,1.1,.3,1)!important}
+@keyframes viIn2{from{transform:scale(.92);opacity:0}}
+.vi-card .vg-frame i{width:20px;height:20px}
+.vi-card .vg-frame i:nth-child(1),.vi-card .vg-frame i:nth-child(2){top:12px}
+.vi-card .vg-frame i:nth-child(3),.vi-card .vg-frame i:nth-child(4){bottom:12px}
+.vi-card .vg-rec{top:auto;bottom:14px}
+.vg-ctrl{padding:40px 10px calc(10px + env(safe-area-inset-bottom,0px))!important;background:linear-gradient(to top,rgba(6,10,8,.75),transparent)!important}
+.vg-console{position:relative;background:rgba(12,18,16,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid #2C3B36;border-radius:16px;padding:12px 12px 12px;box-shadow:0 14px 40px rgba(0,0,0,.5);overflow:visible}
+.vg-console::before{content:"";position:absolute;left:16px;right:16px;top:-1px;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,var(--c5),#8EC5FF)}
+.vg-head{display:flex;gap:12px;align-items:stretch}
+.vg-thumb{width:84px!important;height:72px!important;border-radius:10px!important;border:2px solid var(--c5)!important;margin:0!important;flex:none}
+.vg-thumb .vg-thmap,.vg-thumb img{border-radius:8px!important}
+.vg-tag{left:50%!important;top:auto!important;bottom:-9px;transform:translateX(-50%);background:var(--c5)!important;color:#04162B!important;border-radius:4px!important;font:800 10.5px var(--ui)!important;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px!important}
+.vg-score{flex:1;display:flex;flex-direction:column;gap:5px;min-width:0}
+.vg-slab{font:800 10.5px var(--ui);letter-spacing:.14em;text-transform:uppercase;color:#8EC5FF}
+.vg-led{flex:1;display:grid;grid-template-columns:36px 1fr 36px;align-items:center;background:#05090A;border:1px solid #22302C;border-radius:10px;box-shadow:inset 0 2px 8px rgba(0,0,0,.6);padding:4px}
+.vg-led b{text-align:center;font:900 40px/1 var(--display);letter-spacing:.08em;color:#38506A;font-variant-numeric:tabular-nums}
+.vg-led b.set{color:#FFC566;text-shadow:0 0 12px rgba(255,178,63,.55)}
+.vg-led .vg-arr{width:32px!important;height:32px!important;border-radius:8px!important;background:#1A2622!important;color:var(--fg)!important;box-shadow:none!important}
+.vg-track{height:30px!important;margin-top:14px;border-radius:6px!important;background:#05090A!important;border:1px solid #22302C;box-shadow:inset 0 2px 6px rgba(0,0,0,.6)!important}
+.vg-ticks{left:10px!important;right:10px!important;top:6px!important;bottom:6px!important;opacity:1!important;background:repeating-linear-gradient(90deg,#4A6A8A 0 2px,transparent 2px 19.999%) 0 0/100% 100% no-repeat,repeating-linear-gradient(90deg,#2C3B44 0 1.5px,transparent 1.5px 3.99%) 0 50%/100% 50% no-repeat!important}
+.vg-fill{position:absolute;left:0;top:0;bottom:0;border-radius:6px 0 0 6px;background:linear-gradient(90deg,rgba(58,155,240,.05),rgba(58,155,240,.32));pointer-events:none}
+.vg-knob{top:-6px!important;bottom:-6px!important;width:4px!important;margin-left:-2px!important;border-radius:2px!important;background:#8EC5FF!important;border:0!important;box-shadow:0 0 10px rgba(58,155,240,.9)!important}
+.vg-knob::before{content:"";position:absolute;left:50%;top:-7px;transform:translateX(-50%);border:6px solid transparent;border-top-color:#8EC5FF;border-bottom:0}
+.vg-knob.set{background:#FFC566!important;box-shadow:0 0 10px rgba(255,178,63,.9)!important}
+.vg-knob.set::before{border-top-color:#FFC566}
+.vg-scale{display:flex;justify-content:space-between;padding:4px 4px 0;font:700 10px var(--ui);color:#5E7488;font-variant-numeric:tabular-nums}
+.vg-row{margin-top:12px!important;gap:8px!important}
+.vg-hint{width:auto!important;height:50px!important;padding:0 14px!important;border-radius:10px!important;background:transparent!important;border:1.5px solid #34463F!important;color:var(--fg)!important;font:900 18px var(--display)!important;display:flex;align-items:center;gap:6px}
+.vg-hint svg{width:16px;height:16px;color:var(--accent)}
+.vg-guess{height:50px!important;border-radius:10px!important;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));background:#1A2622!important;color:#56645E!important;font-size:21px!important}
+.vg-guess.ready{background:linear-gradient(135deg,#5BB1FF,var(--c5) 60%,#1E6CBF)!important;color:#03101F!important;box-shadow:none!important}
+.vg-pill{border-radius:6px!important;border-left:3px solid var(--c5);font-weight:800!important;letter-spacing:.04em}
+.vg-tip{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;border-radius:8px!important;border-left:3px solid var(--c5)}
+.vc-photo{border:2px solid var(--c5)!important;border-radius:12px!important}
+.vc-chip{background:rgba(8,12,11,.86)!important;color:#fff!important;border-left:3px solid var(--c5);border-radius:4px!important}
+.vg-card{border-top:3px solid var(--c5)}
 .seg4{grid-template-columns:repeat(4,1fr)!important}
 .seg4 button{font-size:14px;padding:9px 2px;white-space:nowrap}
 </style>
@@ -885,6 +942,7 @@ const MM_TOPICS={"Founding Fathers":["clubs","history","europe","southam"],"Full
  "Big Signings":["transfers","players","europe","d2000"],"Kings of Europe":["ucl","clubs","history","europe"],"Golden Balls":["ballon","players","europe"]};
 const MM_ORDER=["Founding Fathers","Big Signings","Full House","Country First","Kings of Europe","Old Grounds","Centurions","Golden Balls","Golden Boots","Club Legends","Premier Strikers","Host Nations"];
 MM.forEach(p=>p.topics=MM_TOPICS[p.theme.en]);
+MM.forEach(p=>p.stad=['Full House','Old Grounds'].includes(p.theme.en));
 MM.sort((a,b)=>MM_ORDER.indexOf(a.theme.en)-MM_ORDER.indexOf(b.theme.en));
 
 /* =================== TIKI-TAKA PUZZLES ===================
@@ -1385,6 +1443,32 @@ function shirt(k){
  // viewBox hugs the shirt outline so it centres exactly inside the card window
  return `<svg viewBox="11.5 1 77 81.5" aria-hidden="true"><defs><clipPath id="${id}"><path d="${SH}"/></clipPath></defs><g clip-path="url(#${id})">${f}${trim}<path d="M32 70h36v10H32z" fill="rgba(0,0,0,.08)"/></g><path d="${SH}" fill="none" stroke="#161512" stroke-width="2.6" stroke-linejoin="round"/></svg>`;
 }
+
+// Stadium cards get a little illustrated ground instead of a shirt: a bowl in the club's colours,
+// with roof or floodlights varying by name, and landmarks for a few famous grounds.
+function shade(hex,f){const m=/^#([0-9a-f]{6})$/i.exec(hex||'');if(!m)return hex;const n=parseInt(m[1],16);const c=[n>>16,(n>>8)&255,n&255].map(v=>Math.round(f<0?v*(1+f):v+(255-v)*f));return '#'+c.map(v=>v.toString(16).padStart(2,'0')).join('')}
+function stadium(k,name){
+ let a=(k&&k[1])||'#C9C3B4',b=(k&&k[2])||'#8A8578';const n=name||'';let h=7;for(const ch of n)h=(h*31+ch.charCodeAt(0))>>>0;
+ if(/allianz arena/i.test(n)){a='#E2323A';b='#F3EEE2'}
+ if(a.toLowerCase()===b.toLowerCase())b=shade(a,.45);
+ const roof=h%3!==0,lights=!roof||h%5===0,arch=/wembley/i.test(n),ink='#161512';
+ const pole=x=>`<path d="M${x} 44V20" stroke="${ink}" stroke-width="2.2"/><rect x="${x-5}" y="15" width="10" height="6" rx="1.5" fill="#FFF3C9" stroke="${ink}" stroke-width="1.8"/>`;
+ return `<svg viewBox="0 0 100 84" aria-hidden="true">
+  <ellipse cx="50" cy="71" rx="44" ry="7" fill="rgba(0,0,0,.18)"/>
+  ${arch?`<path d="M10 47Q50-8 90 47" fill="none" stroke="${ink}" stroke-width="6.5"/><path d="M10 47Q50-8 90 47" fill="none" stroke="#F3EEE2" stroke-width="3.5"/>`:''}
+  ${lights?pole(12)+pole(88):''}
+  <path d="M6 46V58A44 17 0 0 0 94 58V46" fill="${shade(a,-.35)}" stroke="${ink}" stroke-width="2.4" stroke-linejoin="round"/>
+  <path d="M6 52A44 17 0 0 0 94 52" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1.4"/>
+  <ellipse cx="50" cy="46" rx="44" ry="17" fill="${a}" stroke="${ink}" stroke-width="2.4"/>
+  <ellipse cx="50" cy="46.5" rx="35" ry="12.6" fill="${b}"/>
+  <ellipse cx="50" cy="46.5" rx="39.5" ry="14.8" fill="none" stroke="rgba(0,0,0,.2)" stroke-width="1"/>
+  <ellipse cx="50" cy="46.8" rx="30.5" ry="10.4" fill="none" stroke="rgba(0,0,0,.22)" stroke-width="1"/>
+  <path d="M27 41.5H73L77 52H23Z" fill="#3FA05A" stroke="#F3EEE2" stroke-width="1"/>
+  <path d="M50 41.5V52" stroke="#F3EEE2" stroke-width=".9"/><ellipse cx="50" cy="46.8" rx="4.4" ry="1.9" fill="none" stroke="#F3EEE2" stroke-width=".9"/>
+  ${roof?`<path d="M7 44A43 16 0 0 1 93 44" fill="none" stroke="${ink}" stroke-width="7"/><path d="M7 44A43 16 0 0 1 93 44" fill="none" stroke="rgba(243,238,226,.92)" stroke-width="4.2"/>`:''}
+ </svg>`;
+}
+const tIsStad=n=>TKD.some(bd=>bd.theme.en==='Stadiums'&&bd.rounds.some(r=>r.cards.some(c=>c[0]===n)));
 const nm=it=>it.n.startsWith('@')?L(CTRY[it.n.slice(1)]):it.n;
 function tagText(p,it){
  if(p.tag==='place'){const [c,k]=it.t.split('|');return `${CITY[c]?L(CITY[c]):c} · ${L(CTRY[k])}`}
@@ -1394,7 +1478,7 @@ function tagText(p,it){
 }
 function cardHTML(p,it){
  const i=p.items.indexOf(it),name=nm(it);
- return `<div class="card" style="--c:${COLS[i%COLS.length]}"><div class="meta">${tagText(p,it)}</div><div class="photo">${shirt(it.k)}</div><div class="plate${name.length>15?' long':''}">${name}</div></div>`;
+ return `<div class="card" style="--c:${COLS[i%COLS.length]}"><div class="meta">${tagText(p,it)}</div><div class="photo">${p.stad?stadium(it.k,it.n):shirt(it.k)}</div><div class="plate${name.length>15?' long':''}">${name}</div></div>`;
 }
 const fmtV=(p,v)=>p.kind==='year'?`${L(p.pre)} ${v}`:`${v.toLocaleString(loc())} ${L(p.unit)}`;
 function rng(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
@@ -1686,7 +1770,7 @@ function mmRecap(num){
   <h1 class="h1">${T('Recap','Resumo')}</h1><div class="q2">${L(p.q)}</div>
   <div class="strip" tabindex="0">${sorted.map(it=>`<div class="mini">${cardHTML(p,it)}<span class="val">${fmtV(p,it.v)}</span></div>`).join('')}</div>
   <div class="axis"><span>${L(p.lo)}</span><i></i><span>${L(p.hi)}</span></div>
-  <div class="spot"><h3><span>${T('Champion','Campeã')} ·</span> ${nm(champ)}</h3><ol>${top3.map(it=>`<li><b>${nm(it)}</b> (${fmtV(p,it.v)}). ${L(it.f)}</li>`).join('')}</ol></div>
+  <div class="spot"><h3><span>${T('Champion','Campeão')} ·</span> ${nm(champ)}</h3><ol>${top3.map(it=>`<li><b>${nm(it)}</b> (${fmtV(p,it.v)}). ${L(it.f)}</li>`).join('')}</ol></div>
   <div class="spacer"></div>
   <div class="actions"><button class="btn" id="cont">${T('Continue','Continuar')}</button></div></section>`;
  fitAll('.mini .plate',9);
@@ -1700,7 +1784,7 @@ const RN=[{s:yr('Last 16','Oitavas'),f:yr('Round of 16','Oitavas de final')},{s:
 const RCOL=['var(--c1)','var(--c2)','var(--c4)','var(--accent)'];
 const tName=n=>n.startsWith('@')?L(CTRY[n.slice(1)]):(CLUB[n]?L(CLUB[n]):n);
 const tColor=(ri,i)=>COLS[(i*2+ri*3)%COLS.length];
-function tCard(ri,card,i){const name=tName(card[0]);return `<div class="card" style="--c:${tColor(ri,i)}"><div class="photo">${shirt(K[card[1]])}</div><div class="plate">${name}</div></div>`}
+function tCard(ri,card,i){const name=tName(card[0]);return `<div class="card" style="--c:${tColor(ri,i)}"><div class="photo">${tIsStad(card[0])?stadium(K[card[1]],card[0]):shirt(K[card[1]])}</div><div class="plate">${name}</div></div>`}
 const tkPen=r=>r.rounds.reduce((a,x)=>a+Math.max(x.g-1,0)+x.h,0);
 const tkAcc=r=>Math.round(r.rounds.filter(x=>x.g===1&&x.h===0).length/r.rounds.length*100);
 let TS=null;
@@ -1732,10 +1816,10 @@ function tkIntro(ri){
  o.onclick=close;setTimeout(close,1800);
 }
 function tkGeom(){
- const rows=TS.lay.rows,W=Math.min(app.clientWidth-32,390);
- let cw=W/3;const avail=Math.max(260,window.innerHeight-360);
- if(rows*0.86*cw>avail)cw=Math.max(86,avail/(rows*0.86));
- return {cw,rh:cw*0.86,rows};
+ const rows=TS.lay.rows,W=Math.min(app.clientWidth-24,400);
+ let cw=W/3;const avail=Math.max(280,window.innerHeight-350);
+ if(rows*0.98*cw>avail)cw=Math.max(88,avail/(rows*0.98));
+ return {cw,rh:cw*0.98,rows};
 }
 function tkRender(){
  const {cw,rh,rows}=tkGeom(),L_=TS.lay,r=TS.r,ri=TS.ri;
@@ -1746,11 +1830,11 @@ function tkRender(){
    if(sr===rr){const x1=Math.min(cx(c),cx(sc)),w=Math.abs(cx(c)-cx(sc));bars+=`<div class="tk-bar" style="left:${x1}px;top:${cy(rr)-t/2}px;width:${w}px;height:${t}px;background:${col}"></div>`}
    else{const y1=Math.min(cy(rr),cy(sr)),h=Math.abs(cy(rr)-cy(sr));bars+=`<div class="tk-bar" style="left:${cx(c)-t/2}px;top:${y1}px;width:${t}px;height:${h}px;background:${col}"></div>`}});
   const done=ss.every(s=>TS.locked[s]);const last=ss.map(s=>TS.slots[s]).filter(x=>x!=null).pop();
-  const d=Math.min(cw*0.86,rh*1.0);
-  clues+=`<div class="tk-clue${done?' done':''}" data-ci="${ci}" data-fs="${Math.max(10.5,Math.min(13.5,cw*0.112))}" style="left:${cx(c)}px;top:${cy(rr)}px;width:${d}px;height:${d}px;padding:${d*0.13}px ${d*0.1}px;font-size:${Math.max(10.5,Math.min(13.5,cw*0.112))}px;${!done&&last!=null?`border-color:${tColor(ri,last)}`:''}">${L(r.clues[ci])}</div>`;
+  const d=Math.min(cw*0.76,rh*0.78);
+  clues+=`<div class="tk-clue${done?' done':''}" data-ci="${ci}" data-fs="${Math.max(10,Math.min(13,cw*0.104))}" style="left:${cx(c)}px;top:${cy(rr)}px;width:${d}px;height:${d}px;padding:${d*0.13}px ${d*0.1}px;font-size:${Math.max(10,Math.min(13,cw*0.104))}px;${!done&&last!=null?`border-color:${tColor(ri,last)}`:''}">${L(r.clues[ci])}</div>`;
  });
  L_.slots.forEach(([c,rr],s)=>{const card=TS.slots[s];
-  slots+=`<button class="tk-slot${card!=null?' filled':''}${TS.locked[s]?' locked':''}${TS.wrong.includes(s)?' wrong':''}" data-s="${s}" aria-label="${T('Slot','Espaço')} ${s+1}${card!=null?': '+tName(r.cards[card][0]):''}" style="left:${cx(c)}px;top:${cy(rr)}px;width:${cw*0.64}px;height:${cw*0.76}px">${card!=null?tCard(ri,r.cards[card],card):''}${TS.locked[s]?`<span class="tick">${ICON.check}</span>`:TS.wrong.includes(s)?`<span class="tick bad">${ICON.x}</span>`:''}</button>`});
+  slots+=`<button class="tk-slot${card!=null?' filled':''}${TS.locked[s]?' locked':''}${TS.wrong.includes(s)?' wrong':''}" data-s="${s}" aria-label="${T('Slot','Espaço')} ${s+1}${card!=null?': '+tName(r.cards[card][0]):''}" style="left:${cx(c)}px;top:${cy(rr)}px;width:${cw*0.58}px;height:${cw*0.7}px">${card!=null?tCard(ri,r.cards[card],card):''}${TS.locked[s]?`<span class="tick">${ICON.check}</span>`:TS.wrong.includes(s)?`<span class="tick bad">${ICON.x}</span>`:''}</button>`});
  const b=$('#tkb');b.style.width=3*cw+'px';b.style.height=rows*rh+'px';b.innerHTML=bars+clues+slots;
  // every guess stays on screen as little cards: one per slot, ticks first, then crosses
  $('#tkhist').innerHTML=TS.hist.length?`<span class="lb">${T('Guesses','Chutes')}</span>`+TS.hist.map((h,i)=>`<span class="hg${i===TS.hist.length-1&&TS.histNew?' new':''}" aria-label="${h.r} ${T('right','certas')}, ${h.w} ${T('wrong','erradas')}">${'<i class="ok">✓</i>'.repeat(h.r)}${'<i class="no">✗</i>'.repeat(h.w)}</span>`).join(''):'';TS.histNew=false;
@@ -2207,7 +2291,7 @@ function varIntro(){
  const d=VS.d;
  varScreen(`<section class="screen var-intro">
   <div class="bar"><button class="iconbtn" id="bk" aria-label="${T('Back to home','Voltar ao início')}">${ICON.back}</button><span class="gtitle">VAR</span><button class="iconbtn" id="inf" aria-label="${T('How to play','Como jogar')}">${ICON.info}</button></div>
-  <div class="vi-card"><img src="${VAR_IMG[d.img]}" alt="${T("Today's photo",'A foto do dia')}" draggable="false"></div>
+  <div class="vi-card"><img src="${VAR_IMG[d.img]}" alt="${T("Today's photo",'A foto do dia')}" draggable="false"><div class="vg-frame" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="vg-rec"><b></b>VAR · ${T('REVIEW','REVISÃO')}</span></div></div>
   <div class="eyebrow">${T('Matchday','Rodada')} ${VS.num}</div>
   <h1 class="vi-title" id="vit"></h1>
   <p class="vi-sub" id="vis"></p>
@@ -2252,17 +2336,21 @@ function varPlay(){
  const d=VS.d;VS.mode='photo';
  varScreen(`<section class="vg" id="vg" style="height:${varStageH()}px">
   <div class="vg-layer vg-photo" id="vgp"><img src="${VAR_IMG[d.img]}" alt="${T("Today's photo",'A foto do dia')}" draggable="false"></div>
+  <div class="vg-frame" aria-hidden="true"><i></i><i></i><i></i><i></i><span class="vg-rec"><b></b>VAR · ${T('REVIEW','REVISÃO')}</span></div>
   <div class="vg-layer vg-map" id="vgm"></div>
   <div class="vg-top"><button class="vg-fab" id="bk" aria-label="${T('Back','Voltar')}">${ICON.back}</button><div class="vg-hints" id="vhints"></div><button class="vg-fab" id="inf" aria-label="${T('How to play','Como jogar')}">${ICON.info}</button></div>
   <div class="vg-pill vg-center" id="vgc"></div>
   <div class="vg-ctrl" id="vgctrl">
-   <div class="vg-thumbrow"><button class="vg-thumb" id="vth" aria-label="${T('Switch between photo and map','Alternar entre foto e mapa')}"><span class="vg-tag" id="vtag"></span><div class="vg-thmap" id="vthm"></div><img id="vthi" src="${VAR_IMG[d.img]}" alt="" draggable="false"></button></div>
-   <div class="vg-year">
-    <button class="vg-arr" id="ym" aria-label="${T('One year earlier','Um ano antes')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-    <div class="vg-track" id="vtr" role="slider" tabindex="0" aria-label="${T('Year','Ano')}" aria-valuemin="${VAR_MIN}" aria-valuemax="${VAR_MAX}"><i class="vg-ticks"></i><b class="vg-knob" id="vkn"></b><span class="vg-ylab" id="vyl"></span></div>
-    <button class="vg-arr" id="yp" aria-label="${T('One year later','Um ano depois')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+   <div class="vg-console">
+    <div class="vg-head">
+     <button class="vg-thumb" id="vth" aria-label="${T('Switch between photo and map','Alternar entre foto e mapa')}"><span class="vg-tag" id="vtag"></span><div class="vg-thmap" id="vthm"></div><img id="vthi" src="${VAR_IMG[d.img]}" alt="" draggable="false"></button>
+     <div class="vg-score"><span class="vg-slab" id="vslab"></span>
+      <div class="vg-led"><button class="vg-arr" id="ym" aria-label="${T('One year earlier','Um ano antes')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><b id="vyl"></b><button class="vg-arr" id="yp" aria-label="${T('One year later','Um ano depois')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button></div></div>
+    </div>
+    <div class="vg-track" id="vtr" role="slider" tabindex="0" aria-label="${T('Year','Ano')}" aria-valuemin="${VAR_MIN}" aria-valuemax="${VAR_MAX}"><i class="vg-ticks"></i><i class="vg-fill" id="vfill"></i><b class="vg-knob" id="vkn"></b></div>
+    <div class="vg-scale">${[1900,1925,1950,1975,2000,2025].map(y=>`<span>${y}</span>`).join('')}</div>
+    <div class="vg-row"><button class="vg-hint" id="vhint">${C10_ICON.bulb}${T('Hint','Dica')}</button><button class="vg-guess" id="vgo">${T('Guess','Chutar')}</button></div>
    </div>
-   <div class="vg-row"><button class="vg-guess" id="vgo">${T('Guess','Chutar')}</button><button class="vg-hint" id="vhint">${T('Hint','Dica')}</button></div>
    <div class="vg-tip" id="vtip" role="status"></div>
   </div>
   <div class="vg-card" id="vcard"></div>
@@ -2299,12 +2387,12 @@ function varSetYear(y){
 function varSync(){
  const y=VS.year,f=((y??VAR_MID)-VAR_MIN)/(VAR_MAX-VAR_MIN);
  const kn=$('#vkn'),lb=$('#vyl'),tr=$('#vtr');
- kn.style.left=`calc(10px + ${f} * (100% - 20px))`;lb.style.left=`clamp(34px, calc(10px + ${f} * (100% - 20px)), calc(100% - 34px))`;
- lb.textContent=y==null?T('Select year','Escolha o ano'):y;lb.classList.toggle('set',y!=null);
+ kn.style.left=`calc(10px + ${f} * (100% - 20px))`;$('#vfill').style.width=y==null?'0':`calc(10px + ${f} * (100% - 20px))`;kn.classList.toggle('set',y!=null);
+ lb.textContent=y==null?'––––':y;lb.classList.toggle('set',y!=null);$('#vslab').textContent=y==null?T('Pick the year','Escolha o ano'):T('Year','Ano');
  tr.setAttribute('aria-valuenow',y??VAR_MID);tr.setAttribute('aria-valuetext',y==null?T('No year chosen','Nenhum ano escolhido'):String(y));
  if(VS.mode==='map')$('#vgc').classList.toggle('show',!VS.pin);
  $('#vgo').classList.toggle('ready',!!VS.pin&&y!=null);
- const nh=VS.hints.length,hb=$('#vhint');hb.disabled=nh>=VAR_HINTS.length;
+ const nh=VS.hints.length,hb=$('#vhint');hb.disabled=nh>=VAR_HINTS.length;hb.title=T('Each hint costs one medal','Cada dica custa uma medalha');
  hb.setAttribute('aria-label',nh>=VAR_HINTS.length?T('No hints left','Sem dicas'):T('Use a hint. It costs one medal.','Usar uma dica. Custa uma medalha.'));
  $('#vhints').innerHTML=VS.hints.map(h=>`<span class="var-chip">${h==='country'?`${VAR_IC.flag}${L(CTRY[VS.d.c])}`:`${VAR_IC.cal}${topicLabel('d'+Math.floor(VS.d.y/10)*10)}`}</span>`).join('');
 }
@@ -2557,7 +2645,7 @@ const ICON_USER='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 function acctBtn(){
  if(!cloudOn)return'';
  const n=incomingCount(),lbl=session?(profile?profile.username:T('Account','Conta')):T('Log in','Entrar');
- return `<button class="acctbtn${session?' on':''}" data-acct aria-label="${esc(lbl)}${n?`, ${n} ${T('friend requests','pedidos de amizade')}`:''}">${session&&profile?`<b>${esc(profile.username[0].toUpperCase())}</b>`:ICON_USER}${n?'<i class="ndot"></i>':''}</button>`;
+ return `<button class="acctbtn${session?' on':''}" data-acct aria-label="${esc(lbl)}${n?`, ${n} ${T('friend requests','pedidos de amizade')}`:''}">${ICON_USER}${n?'<i class="ndot"></i>':''}</button>`;
 }
 function acctCard(){
  if(!cloudOn)return'';
@@ -2626,7 +2714,7 @@ function accountScreen(){
 }
 function codeScreen(){
  subScreen(T('Log in','Entrar'),`
-  <h1 class="h1">${T('Check your email','Confira seu e-mail')}</h1><p class="lede">${T(`We sent a code to <b>${esc(pendingEmail)}</b>. It can take a minute; check spam too.`,`Mandamos um código para <b>${esc(pendingEmail)}</b>. Pode levar um minuto; veja o spam também.`)}</p>
+  <h1 class="h1">${T('Check your email','Confira seu e-mail')}</h1><p class="lede">${T(`We sent an email to <b>${esc(pendingEmail)}</b>. Type the code from it here, or tap its link on this same device. It can take a minute; check spam too.`,`Mandamos um e-mail para <b>${esc(pendingEmail)}</b>. Digite aqui o código que veio nele, ou toque no link do e-mail neste mesmo aparelho. Pode levar um minuto; veja o spam também.`)}</p>
   <form id="cform" class="acol" novalidate><label class="fl" for="acode">${T('Code','Código')}</label><input id="acode" class="ain code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" required><button class="btn" type="submit">${T('Log in','Entrar')}</button></form>
   <p class="amsg" id="amsg" role="status"></p><button class="textbtn" id="cback">${T('Use another email','Usar outro e-mail')}</button>`,accountScreen);
  $('#cback').onclick=accountScreen;$('#acode').focus();
@@ -2713,7 +2801,7 @@ const FLAME_BIG=`<svg viewBox="0 0 120 140" aria-hidden="true"><defs><linearGrad
 const FLAME_SM='<svg viewBox="0 0 24 28" aria-hidden="true"><path d="M12.4 1.5c.8 4.8 8 7.6 8 16.4a8.4 8.4 0 0 1-16.8 0c0-4.4 2.4-6.8 4-8.8.4 2.4 1.6 4 3 4.4-1-4.8.4-8.8 1.8-12z" fill="#FF8A2B" stroke="#1A0E06" stroke-width="1.4" stroke-linejoin="round"/><path d="M12.2 12c.8 3 4.6 4.6 4.6 8.4a4.6 4.6 0 0 1-9.2 0c0-2.4 1.2-3.6 2-4.6.2 1.2.8 2 1.6 2.2-.6-2.4.2-4.4 1-6z" fill="#FFD25E"/></svg>';
 function afterGame(){const n=todayNum();if(playedOn(n)&&store.streakSeen!==n){store.streakSeen=n;save();streakScreen()}else home()}
 function streakScreen(){
- const n=todayNum(),s=streak(),dow=new Date().getDay(),letters=T('SMTWTFS','DSTQQSS');
+ const n=todayNum(),s=streak(),dow=(new Date().getDay()+6)%7,letters=T('MTWTFSS','STQQSSD');
  let week='';
  for(let i=0;i<7;i++){const k=n-dow+i,today=i===dow,on=k>=1&&k<=n&&playedOn(k);
   week+=`<div class="sk-d${today?' today':''}"><span>${letters[i]}</span><i class="${on?'on':k>n?'fut':'off'}">${on?FLAME_SM:''}${today&&on?'<b class="sk-ck">'+ICON.check+'</b>':''}</i></div>`}
