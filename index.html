@@ -713,6 +713,12 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .vg-guess{height:50px!important;border-radius:10px!important;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));background:#1A2622!important;color:#56645E!important;font-size:21px!important}
 .vg-guess.ready{background:linear-gradient(135deg,#5BB1FF,var(--c5) 60%,#1E6CBF)!important;color:#03101F!important;box-shadow:none!important}
 .vg-pill{border-radius:6px!important;border-left:3px solid var(--c5);font-weight:800!important;letter-spacing:.04em}
+.vg-hide{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:4px;height:26px;padding:0 11px 0 8px;border-radius:999px;border:1px solid #2C3B36;background:rgba(12,18,16,.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--fg);font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;max-width:none!important;margin:0!important}
+.vg-hide svg{width:15px;height:15px;transition:transform .3s}
+.vg-ctrl.min{transform:translateY(calc(100% - 42px));background:none!important}
+.vg-ctrl.min .vg-hide svg{transform:rotate(180deg)}
+.vg-ctrl.min .vg-console{opacity:0;pointer-events:none}
+.vg-console{transition:opacity .3s}
 .vg-tip{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;border-radius:8px!important;border-left:3px solid var(--c5)}
 .vc-photo{border:2px solid var(--c5)!important;border-radius:12px!important}
 .vc-chip{background:rgba(8,12,11,.86)!important;color:#fff!important;border-left:3px solid var(--c5);border-radius:4px!important}
@@ -1404,8 +1410,8 @@ function todayNum(){const d=new Date();const t=new Date(d.getFullYear(),d.getMon
 const mmP=num=>MM[num-1]||null;
 function dateOf(num){const d=new Date(LAUNCH);d.setDate(d.getDate()+num-1);return d}
 const fmtDate=d=>d.toLocaleDateString(loc(),{day:'2-digit',month:'short',year:'numeric'});
-const KEY='b2b-v3'; // season 3: everyone starts again from Rodada 1 (10 Oct 2026)
-const SEASON=3;
+const KEY='b2b-v4'; // season 4: everyone starts again from Rodada 1 (10 Oct 2026)
+const SEASON=4;
 let store={res:{},know:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.res){store=s;store.know=store.know||{}}}catch(e){}
 {const MIG={br:'c_BRA',england:'c_ENG',italy:'c_ITA',spain:'c_ESP',germany:'c_GER',france:'c_FRA',s70:'d1970'};Object.keys(store.know).forEach(k=>{if(MIG[k]){store.know[MIG[k]]=(store.know[MIG[k]]||0)+store.know[k];delete store.know[k]}})}
@@ -1744,11 +1750,11 @@ function mmAdvance(){
  },matchMedia('(prefers-reduced-motion: reduce)').matches?0:300);
 }
 function mmRules(){modal(T('How to play','Como jogar'),[
- yr('Every day brings one question and eleven cards.','Todo dia tem uma pergunta e onze cartas.'),
+ yr('Every day brings one question and eight cards.','Todo dia tem uma pergunta e oito cartas.'),
  yr('Two cards meet in each round. Tap the one that answers the question, then press Guess.','Duas cartas se enfrentam em cada duelo. Toque na que responde à pergunta e aperte Chutar.'),
  yr('The real winner stays on the table and the loser is knocked out, even if you picked wrong.','A vencedora de verdade fica na mesa e a perdedora é eliminada, mesmo se você errar.'),
  yr('Only the knocked-out card shows its number, so the winner keeps you guessing.','Só a carta eliminada mostra o número, então a vencedora segue um mistério.'),
- yr('Ten rounds decide the champion card. You get three hints per game.','Dez duelos decidem a carta campeã. Você tem três dicas por jogo.')])}
+ yr('Seven rounds decide the champion card. You get three hints per game.','Sete duelos decidem a carta campeã. Você tem três dicas por jogo.')])}
 function mmResult(num){
  const p=mmP(num),r=R('mm',num),mis=r.marks.filter(x=>!x).length,acc=Math.round((r.marks.length-mis)/r.marks.length*100);
  app.innerHTML=`<section class="screen result"><div class="beams" aria-hidden="true"></div>
@@ -1877,7 +1883,7 @@ function tkDrag(el,src){
   const sx=e.clientX,sy=e.clientY;let ghost=null,target=null;
   el.setPointerCapture?.(e.pointerId);
   const mv=ev=>{
-   if(!ghost&&card!=null&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>6){ghost=document.createElement('div');ghost.className='tk-ghost';ghost.innerHTML=tCard(TS.ri,TS.r.cards[card],card);document.body.appendChild(ghost);el.style.opacity=.35}
+   if(!ghost&&card!=null&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>6){ghost=document.createElement('div');ghost.className='tk-ghost';ghost.innerHTML=tCard(TS.ri,TS.r.cards[card],card);document.body.appendChild(ghost);if(src==='deck'){const c=el.querySelector('.card'),nx=TS.deck[1];if(c){if(nx!=null)c.outerHTML=tCard(TS.ri,TS.r.cards[nx],nx);else c.style.visibility='hidden'}if(TS.deck.length<3)el.querySelector('.under:last-of-type')?.remove()}else el.style.opacity=.35}
    if(ghost){ghost.style.left=ev.clientX+'px';ghost.style.top=ev.clientY+'px';
     const hit=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.tk-slot');
     document.querySelectorAll('.tk-slot.target').forEach(x=>x.classList.remove('target'));
@@ -2687,9 +2693,123 @@ const C10_NEW=["Ronaldo","Zico","Lionel Messi","Cristiano Ronaldo","Diego Marado
 // All 30 days of each game in one shuffled pool (season 3 restart)
 MM.push(...MM_NEW.map(p=>({...p,stad:!!p.stad,items:p.items.map(a=>({n:a[0],t:a[1],v:a[2],k:K[a[3]],f:{en:a[4],pt:a[5]}}))})));
 TKD.push(...TKD_NEW);C10.push(...C10_NEW);
+// ---- Mata-Mata: 8 cards per day, values kept close together ----
+Object.assign(K,{preston:['solid','#F4F4F0',null,'#1A2B5E'],sunderland:['stripes','#D2172E','#F4F4F0'],sheffutd:['stripes','#D2172E','#F4F4F0'],provercelli:['solid','#F4F4F0',null,'#161512'],
+ casale:['solid','#161512',null,'#F4F4F0'],WAL:['solid','#D2172E',null,'#F4F4F0'],AUS:['solid','#F2C230',null,'#0E6B3A'],TUN:['solid','#F4F4F0',null,'#D2172E'],URS:['solid','#D2172E',null,'#F4F4F0'],
+ ZAM:['solid','#1D9A55',null,'#F47B20'],RSA:['solid','#F2C230',null,'#0E6B3A'],TCH:['solid','#D2172E',null,'#1E3F8F']});
+Object.assign(CTRY,{WAL:{en:'Wales',pt:'País de Gales'},AUS:{en:'Australia',pt:'Austrália'},TUN:{en:'Tunisia',pt:'Tunísia'},URS:{en:'Soviet Union',pt:'União Soviética'},ZAM:{en:'Zambia',pt:'Zâmbia'},ETH:{en:'Ethiopia',pt:'Etiópia'},GAB:{en:'Gabon',pt:'Gabão'}});
+Object.assign(CITY,{'Addis Ababa':{en:'Addis Ababa',pt:'Adis Abeba'},Algiers:{en:'Algiers',pt:'Argel'},Istanbul:{en:'Istanbul',pt:'Istambul'},Abidjan:{en:'Abidjan',pt:'Abidjã'},Dakar:{en:'Dakar',pt:'Dacar'},
+ Johannesburg:{en:'Johannesburg',pt:'Joanesburgo'},Libreville:{en:'Libreville',pt:'Libreville'},Lagos:{en:'Lagos',pt:'Lagos'},Radès:{en:'Radès',pt:'Radès'},Barcelona:{en:'Barcelona',pt:'Barcelona'}});
+const MM_REDO={
+ "Debutants":{items:[
+  ["@SCO","EU",1954,"SCO","Lost 7–0 to Uruguay.","Perdeu por 7 a 0 para o Uruguai."],
+  ["@WAL","EU",1958,"WAL","Reached the quarter-finals, losing to a Pelé goal.","Chegou às quartas e caiu com um gol de Pelé."],
+  ["@COL","SA",1962,"COL","Drew 4–4 with the Soviet Union after trailing 4–1.","Empatou por 4 a 4 com a União Soviética depois de perder por 4 a 1."],
+  ["@POR","EU",1966,"POR","Finished third, with Eusébio as top scorer.","Ficou em terceiro, com Eusébio como artilheiro."],
+  ["@MAR","AF",1970,"MAR","Led West Germany 1–0 before losing 2–1.","Abriu 1 a 0 sobre a Alemanha Ocidental antes de perder por 2 a 1."],
+  ["@AUS","AS",1974,"AUS","Went home without scoring a goal.","Voltou para casa sem marcar nenhum gol."],
+  ["@TUN","AF",1978,"TUN","Beat Mexico 3–1 in its opening game.","Venceu o México por 3 a 1 na estreia."],
+  ["@CMR","AF",1982,"CMR","Went home unbeaten after three draws.","Voltou para casa invicto, com três empates."]]},
+ "English Champions":{items:[
+  ["Preston North End","Preston|ENG",1889,"preston","Went the whole season unbeaten and were nicknamed the Invincibles.","Passou a temporada invicto e ganhou o apelido de Invencíveis."],
+  ["Everton","Liverpool|ENG",1891,"everton","Played at Anfield before moving to Goodison Park.","Jogava em Anfield antes de se mudar para Goodison Park."],
+  ["Sunderland","Sunderland|ENG",1892,"sunderland","Its 'Team of All Talents' won three titles in four seasons.","Seu 'Time de Todos os Talentos' ganhou três títulos em quatro temporadas."],
+  ["Aston Villa","Birmingham|ENG",1894,"avilla","Its director William McGregor founded the Football League.","Seu dirigente William McGregor fundou a Football League."],
+  ["Sheffield United","Sheffield|ENG",1898,"sheffutd","Plays at Bramall Lane, a ground also used for cricket in its early years.","Joga em Bramall Lane, estádio que também recebia críquete no início."],
+  ["Liverpool","Liverpool|ENG",1901,"lfc","Was founded after Everton left Anfield.","Foi fundado depois que o Everton deixou Anfield."],
+  ["Newcastle","Newcastle|ENG",1905,"toon","Has played at St James' Park since the 1890s.","Joga no St James' Park desde a década de 1890."],
+  ["Manchester United","Manchester|ENG",1908,"mufc","Began as Newton Heath, a railway workers' team.","Começou como Newton Heath, um time de ferroviários."]]},
+ "Opening Day":{items:[
+  ["Stade de France","Saint-Denis|FRA",1998,"FRA","Has no resident club.","Não tem um clube como mandante fixo."],
+  ["Estádio da Luz","Lisbon|POR",2003,"benfica","Was built to replace the old Luz next door.","Foi construído para substituir o antigo Estádio da Luz, ao lado."],
+  ["Allianz Arena","Munich|GER",2005,"bayern","Its outer panels can light up in different colours.","Os painéis da fachada podem acender em cores diferentes."],
+  ["Emirates Stadium","London|ENG",2006,"afc","Replaced Highbury as Arsenal's home.","Substituiu Highbury como casa do Arsenal."],
+  ["Wembley","London|ENG",2007,"ENG","Its arch can be seen from across London.","Seu arco pode ser visto de vários pontos de Londres."],
+  ["Juventus Stadium","Turin|ITA",2011,"juve","Was built on the site of the Stadio delle Alpi.","Foi construído no lugar do Stadio delle Alpi."],
+  ["Arena do Grêmio","Porto Alegre|BRA",2012,"gremio","Replaced the Olímpico as Grêmio's home.","Substituiu o Olímpico como casa do Grêmio."],
+  ["Metropolitano","Madrid|ESP",2017,"atleti","Hosted the Liverpool–Tottenham Champions League final.","Recebeu a final da Champions entre Liverpool e Tottenham."]]},
+ "Scudetto":{items:[
+  ["Genoa","Genoa|ITA",1898,"genoa","Founded by Englishmen as a cricket and athletics club.","Fundado por ingleses como clube de críquete e atletismo."],
+  ["Milan","Milan|ITA",1901,"milan","Founded by the Englishman Herbert Kilpin.","Fundado pelo inglês Herbert Kilpin."],
+  ["Juventus","Turin|ITA",1905,"juve","Founded by students from a Turin secondary school.","Fundada por estudantes de um colégio de Turim."],
+  ["Pro Vercelli","Vercelli|ITA",1908,"provercelli","A club from a small Piedmont town that won seven titles.","Clube de uma pequena cidade do Piemonte que ganhou sete títulos."],
+  ["Inter","Milan|ITA",1910,"inter","Formed by members who broke away from Milan.","Criada por sócios que romperam com o Milan."],
+  ["Casale","Casale Monferrato|ITA",1914,"casale","Beat Lazio in the national final.","Venceu a Lazio na final nacional."],
+  ["Bologna","Bologna|ITA",1925,"bologna","Plays at the Stadio Renato Dall'Ara.","Joga no Estádio Renato Dall'Ara."],
+  ["Torino","Turin|ITA",1928,"torino","Had the previous season's title taken away in a bribery case.","Teve o título da temporada anterior cassado por suborno."]]},
+ "Lifting the Cup":{items:[
+  ["Dino Zoff","ITA",1982,"ITA","A goalkeeper who was 40 when he lifted the trophy.","Goleiro que tinha 40 anos ao levantar a taça."],
+  ["Diego Maradona","ARG",1986,"ARG","Scored twice against England in the quarter-final.","Fez dois gols contra a Inglaterra nas quartas de final."],
+  ["Lothar Matthäus","FRG",1990,"GER","Played at five World Cups.","Disputou cinco Copas do Mundo."],
+  ["Dunga","BRA",1994,"BRA","Scored in the final's penalty shoot-out against Italy.","Converteu sua cobrança na disputa de pênaltis da final contra a Itália."],
+  ["Didier Deschamps","FRA",1998,"FRA","Later won the World Cup again as coach.","Depois ganhou a Copa de novo, como técnico."],
+  ["Cafu","BRA",2002,"BRA","Played in three World Cup finals in a row.","Jogou três finais de Copa seguidas."],
+  ["Fabio Cannavaro","ITA",2006,"ITA","Won the Ballon d'Or the same year.","Ganhou a Bola de Ouro no mesmo ano."],
+  ["Iker Casillas","ESP",2010,"ESP","A goalkeeper who spent most of his career at Real Madrid.","Goleiro que passou a maior parte da carreira no Real Madrid."]]},
+ "Birthdays":{items:[
+  ["Ronaldo","BRA",1976,"BRA","Won two World Cups with Brazil.","Ganhou duas Copas do Mundo com o Brasil."],
+  ["Thierry Henry","FRA",1977,"FRA","Is Arsenal's all-time top scorer.","É o maior artilheiro da história do Arsenal."],
+  ["Gianluigi Buffon","ITA",1978,"ITA","Played for Juventus for almost two decades.","Jogou na Juventus por quase duas décadas."],
+  ["Andrea Pirlo","ITA",1979,"ITA","Won the World Cup and two Champions Leagues.","Ganhou a Copa do Mundo e duas Champions."],
+  ["Ronaldinho","BRA",1980,"BRA","Started his career at Grêmio.","Começou a carreira no Grêmio."],
+  ["Zlatan Ibrahimović","SWE",1981,"SWE","Won league titles in the Netherlands, Italy, Spain and France.","Foi campeão nacional na Holanda, Itália, Espanha e França."],
+  ["Kaká","BRA",1982,"BRA","Came through at São Paulo FC.","Foi revelado pelo São Paulo."],
+  ["Cristiano Ronaldo","POR",1985,"POR","Joined Manchester United from Sporting.","Foi do Sporting para o Manchester United."]]},
+ "Olympic Gold":{items:[
+  ["@FRA","EU",1984,"FRA","Beat Brazil in the final at the Rose Bowl.","Venceu o Brasil na final, no Rose Bowl."],
+  ["@URS","EU",1988,"URS","Beat Brazil in the final in Seoul.","Venceu o Brasil na final, em Seul."],
+  ["@ESP","EU",1992,"ESP","Won it at home, at the Camp Nou.","Foi campeã em casa, no Camp Nou."],
+  ["@NGA","AF",1996,"NGA","Beat Brazil and Argentina on the way to gold.","Venceu Brasil e Argentina a caminho do ouro."],
+  ["@CMR","AF",2000,"CMR","Beat Spain on penalties in the final.","Venceu a Espanha nos pênaltis na final."],
+  ["@ARG","SA",2004,"ARG","Carlos Tevez was the tournament's top scorer.","Carlos Tevez foi o artilheiro do torneio."],
+  ["@MEX","NA",2012,"MEX","Beat Brazil in the final at Wembley.","Venceu o Brasil na final, em Wembley."],
+  ["@BRA","SA",2016,"BRA","Neymar scored the winning penalty against Germany.","Neymar converteu o pênalti decisivo contra a Alemanha."]]},
+ "Winning Managers":{items:[
+  ["Arrigo Sacchi","Milan",1989,"milan","Milan beat Steaua Bucharest 4–0 in the final.","O Milan venceu o Steaua Bucareste por 4 a 0 na final."],
+  ["Johan Cruyff","Barcelona",1992,"barca","Ronald Koeman's free kick won the final at Wembley.","A falta de Ronald Koeman decidiu a final em Wembley."],
+  ["Raymond Goethals","Marseille",1993,"marseille","Basile Boli's header beat Milan in the final.","Uma cabeçada de Basile Boli derrotou o Milan na final."],
+  ["Fabio Capello","Milan",1994,"milan","Milan beat Barcelona 4–0 in the final.","O Milan venceu o Barcelona por 4 a 0 na final."],
+  ["Louis van Gaal","Ajax",1995,"ajax","A teenage Patrick Kluivert scored the winner against Milan.","Um jovem Patrick Kluivert fez o gol do título contra o Milan."],
+  ["Marcello Lippi","Juventus",1996,"juve","Juventus beat Ajax on penalties in Rome.","A Juventus venceu o Ajax nos pênaltis em Roma."],
+  ["Ottmar Hitzfeld","Dortmund",1997,"bvb","Later won it with a second German club.","Depois venceu também com outro clube alemão."],
+  ["Jupp Heynckes","Real Madrid",1998,"real","Later won it with Bayern as well.","Depois venceu também com o Bayern."]]},
+ "Continental Kings":{theme:yr("Kings of Africa","Reis da África"),q:yr("Which team won its first Africa Cup of Nations earlier?","Qual seleção ganhou sua primeira Copa Africana antes?"),
+  basis:yr("The year of each nation's first Africa Cup of Nations title. Cards show where the final was played.","O ano do primeiro título de cada seleção na Copa Africana de Nações. A carta mostra onde foi a final."),tag:"place",topics:["national","africa","history"],items:[
+  ["@MAR","Addis Ababa|ETH",1976,"MAR","Won the title in a final group played in Ethiopia.","Ganhou o título num quadrangular final disputado na Etiópia."],
+  ["@NGA","Lagos|NGA",1980,"NGA","Won it at home in Lagos.","Foi campeã em casa, em Lagos."],
+  ["@CMR","Abidjan|CIV",1984,"CMR","Beat Nigeria 3–1 in the final.","Venceu a Nigéria por 3 a 1 na final."],
+  ["@ALG","Algiers|ALG",1990,"ALG","Won it at home, beating Nigeria in the final.","Foi campeã em casa, vencendo a Nigéria na final."],
+  ["@CIV","Dakar|SEN",1992,"CIV","Beat Ghana 11–10 on penalties in the final.","Venceu Gana por 11 a 10 nos pênaltis na final."],
+  ["@RSA","Johannesburg|RSA",1996,"RSA","Won it at home, soon after returning to international football.","Foi campeã em casa, pouco depois de voltar ao futebol internacional."],
+  ["@TUN","Radès|TUN",2004,"TUN","Won it at home under coach Roger Lemerre.","Foi campeã em casa com o técnico Roger Lemerre."],
+  ["@ZAM","Libreville|GAB",2012,"ZAM","Won the final in Gabon, near where its team died in a 1993 plane crash.","Venceu a final no Gabão, perto de onde sua seleção morreu num acidente aéreo em 1993."]]},
+ "Copa América Hosts":{theme:yr("Champions League Finals","Finais da Champions"),q:yr("Which final was played first?","Qual final aconteceu primeiro?"),
+  basis:yr("The year of each Champions League final. Cards show the winner and the host city.","O ano de cada final da Champions. A carta mostra o campeão e a cidade da final."),pre:yr("final in","final em"),tag:"place",topics:["ucl","clubs","europe","d2000"],items:[
+  ["Manchester United","Barcelona|ESP",1999,"mufc","Two stoppage-time goals beat Bayern.","Dois gols nos acréscimos derrotaram o Bayern."],
+  ["Bayern Munich","Milan|ITA",2001,"bayern","Beat Valencia on penalties at San Siro.","Venceu o Valencia nos pênaltis no San Siro."],
+  ["Real Madrid","Glasgow|SCO",2002,"real","Zidane volleyed the winner against Leverkusen at Hampden.","Zidane fez o gol do título de voleio contra o Leverkusen, em Hampden."],
+  ["Milan","Manchester|ENG",2003,"milan","Beat Juventus on penalties at Old Trafford.","Venceu a Juventus nos pênaltis em Old Trafford."],
+  ["Porto","Gelsenkirchen|GER",2004,"porto","Beat Monaco 3–0.","Venceu o Monaco por 3 a 0."],
+  ["Liverpool","Istanbul|TUR",2005,"lfc","Came back from 3–0 down at half-time against Milan.","Virou contra o Milan depois de perder por 3 a 0 no intervalo."],
+  ["Barcelona","Paris|FRA",2006,"barca","Beat Arsenal with two late goals.","Venceu o Arsenal com dois gols no fim."],
+  ["Inter","Madrid|ESP",2010,"inter","Diego Milito scored both goals against Bayern.","Diego Milito fez os dois gols contra o Bayern."]]},
+ "Golden Balls":{items:[
+  ["Roberto Baggio","Juventus",1993,"juve","Nicknamed 'Il Divin Codino'.","Apelidado de 'Il Divin Codino'."],
+  ["Hristo Stoichkov","Barcelona",1994,"barca","Was part of Cruyff's 'Dream Team' at Barcelona.","Fez parte do 'Dream Team' de Cruyff no Barcelona."],
+  ["George Weah","Milan",1995,"milan","Later became president of Liberia.","Depois se tornou presidente da Libéria."],
+  ["Matthias Sammer","Dortmund",1996,"bvb","A sweeper who started out in East Germany.","Líbero que começou a carreira na Alemanha Oriental."],
+  ["Ronaldo","Inter",1997,"inter","Won it in his first season at Inter.","Ganhou na sua primeira temporada pela Inter."],
+  ["Zinedine Zidane","Juventus",1998,"juve","Won it the year he scored twice in a World Cup final.","Ganhou no ano em que fez dois gols numa final de Copa."],
+  ["Rivaldo","Barcelona",1999,"barca","Later played for Milan and Olympiacos.","Depois jogou no Milan e no Olympiacos."],
+  ["Luís Figo","Real Madrid",2000,"real","Moved from Barcelona to Real Madrid that year.","Trocou o Barcelona pelo Real Madrid naquele ano."]]}
+};
+Object.assign(CONT,{AS:CONT.AS||{en:'Asia',pt:'Ásia'}});
+MM.forEach(p=>{const r=MM_REDO[p.theme.en];if(r){const{items,...rest}=r;Object.assign(p,rest);p.items=items.map(a=>({n:a[0],t:a[1],v:a[2],k:K[a[3]],f:{en:a[4],pt:a[5]}}))}
+ // keep the 8 closest values (tightest window), so neighbours are hard to tell apart
+ if(p.items.length>8){const s=[...p.items].sort((a,b)=>a.v-b.v);let best=0,bs=Infinity;for(let i=0;i+8<=s.length;i++){const sc=p.kind==='num'?s[i+7].v/s[i].v:s[i+7].v-s[i].v;if(sc<bs){bs=sc;best=i}}p.items=s.slice(best,best+8)}});
 reorder(MM,SEED_MM);reorder(TKD,SEED_TT);reorder(C10,SEED_C10);reorder(VAR,SEED_VAR);
-// Season 3 order (seeds chosen so similar themes and same-country items never fall on consecutive days)
-reorder(MM,1838);reorder(TKD,2965);reorder(C10,4007);reorder(VAR,4648);
+// Season 4 order (seeds chosen so similar themes and same-country items never fall on consecutive days)
+reorder(MM,5122);reorder(TKD,6216);reorder(C10,7305);reorder(VAR,8420);
 
 const VAR_MIN=1900,VAR_MAX=2026,VAR_HINTS=['country','decade'];
 const varPlace=d=>`${L(d.st)} | ${L(d.city)} | ${L(CTRY[d.c])}`;
@@ -2880,6 +3000,7 @@ function varPlay(){
   <div class="vg-top"><button class="vg-fab" id="bk" aria-label="${T('Back','Voltar')}">${ICON.back}</button><div class="vg-hints" id="vhints"></div><button class="vg-fab" id="inf" aria-label="${T('How to play','Como jogar')}">${ICON.info}</button></div>
   <div class="vg-pill vg-center" id="vgc"></div>
   <div class="vg-ctrl" id="vgctrl">
+   <button class="vg-hide" id="vhide" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span>${T('Hide','Ocultar')}</span></button>
    <div class="vg-console">
     <div class="vg-head">
      <button class="vg-thumb" id="vth" aria-label="${T('Switch between photo and map','Alternar entre foto e mapa')}"><span class="vg-tag" id="vtag"></span><div class="vg-thmap" id="vthm"></div><img id="vthi" src="${VAR_IMG[d.img]}" alt="" draggable="false"></button>
@@ -2895,6 +3016,7 @@ function varPlay(){
   <div class="vg-card" id="vcard"></div>
  </section>`,true);
  const pp=new PhotoPan($('#vgp'),$('#vgp img'));
+ $('#vhide').onclick=()=>{const c=$('#vgctrl'),m=c.classList.toggle('min');$('#vhide').setAttribute('aria-expanded',!m);$('#vhide span').textContent=m?T('Show','Mostrar'):T('Hide','Ocultar')};
  const big=new WMap($('#vgm'),{pick:true,interactive:true,pin:VS.pin,onPin:p=>{VS.pin=p;varSync()},onMove:()=>{VS.moved=true;$('#vgc').classList.remove('show')}});
  const mini=new WMap($('#vthm'),{nolabels:true,pin:VS.pin});
  VAR_VIEW.push(pp,big,mini);VS.pp=pp;VS.big=big;VS.mini=mini;
