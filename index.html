@@ -726,7 +726,7 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js"></script>
 <script src="config.js"></script>
 <script src="data/wmap.js"></script>
-<script>const VAR_IMG={"01": "img/var/3a86999a5e5a.jpg", "02": "img/var/a5d3a21c47a6.jpg", "03": "img/var/4d9f4237ac57.jpg", "04": "img/var/4bf8f39355b6.jpg", "05": "img/var/9b61f0d09c7a.jpg", "06": "img/var/49db6cbfb618.jpg", "07": "img/var/fa200eb3cccf.jpg", "08": "img/var/248fc46217f2.jpg", "09": "img/var/2af096dbd04e.jpg", "10": "img/var/25cbb999cc05.jpg"};</script>
+<script>const VAR_IMG={"01": "img/var/3a86999a5e5a.jpg", "02": "img/var/a5d3a21c47a6.jpg", "03": "img/var/4d9f4237ac57.jpg", "04": "img/var/4bf8f39355b6.jpg", "05": "img/var/9b61f0d09c7a.jpg", "06": "img/var/49db6cbfb618.jpg", "07": "img/var/fa200eb3cccf.jpg", "08": "img/var/248fc46217f2.jpg", "09": "img/var/2af096dbd04e.jpg", "10": "img/var/25cbb999cc05.jpg", "11": "img/var/24ec83595539.jpg", "12": "img/var/b83b0228a2ff.jpg", "13": "img/var/eb4d0fadf945.jpg", "14": "img/var/704357178768.jpg", "15": "img/var/0e45ce632b2f.jpg", "16": "img/var/5a3b3112169e.jpg", "17": "img/var/143ab8b56fae.jpg", "18": "img/var/d0e56f110820.jpg", "19": "img/var/465cfc071907.jpg", "20": "img/var/e3929cc28ecb.jpg", "21": "img/var/39ddd5500690.jpg", "22": "img/var/0ab7db15072f.jpg", "23": "img/var/b389e03325f1.jpg", "24": "img/var/6391528d9fe7.jpg", "25": "img/var/b87bc2ef6e14.jpg", "26": "img/var/2bc2413c9326.jpg", "27": "img/var/f374ba479247.jpg", "28": "img/var/e2a8b8f06c73.jpg", "29": "img/var/139a4b959469.jpg", "30": "img/var/047fec75a33a.jpg", "31": "img/var/23ec931be4ed.jpg", "32": "img/var/7d13e2439fd9.jpg", "33": "img/var/cb7d6eba11f3.jpg", "34": "img/var/f7e25da287bf.jpg", "35": "img/var/44367ee2ce07.jpg"};</script>
 <script>
 /* =================== LANGUAGE =================== */
 let LANG=(()=>{try{const l=localStorage.getItem('b2b-lang');if(l==='pt'||l==='en')return l}catch(e){}return (navigator.language||'').toLowerCase().startsWith('pt')?'pt':'en'})();
@@ -740,7 +740,7 @@ document.documentElement.lang=LANG==='pt'?'pt-BR':'en';
 const CTRY={BRA:{en:'Brazil',pt:'Brasil'},ARG:{en:'Argentina',pt:'Argentina'},URU:{en:'Uruguay',pt:'Uruguai'},GER:{en:'Germany',pt:'Alemanha'},
  FRG:{en:'West Germany',pt:'Alemanha Ocidental'},FRA:{en:'France',pt:'França'},ENG:{en:'England',pt:'Inglaterra'},ESP:{en:'Spain',pt:'Espanha'},
  ITA:{en:'Italy',pt:'Itália'},HUN:{en:'Hungary',pt:'Hungria'},SWE:{en:'Sweden',pt:'Suécia'},CHI:{en:'Chile',pt:'Chile'},MEX:{en:'Mexico',pt:'México'},POR:{en:'Portugal',pt:'Portugal'},DEN:{en:'Denmark',pt:'Dinamarca'},GRE:{en:'Greece',pt:'Grécia'},SCO:{en:'Scotland',pt:'Escócia'},CRO:{en:'Croatia',pt:'Croácia'},POL:{en:'Poland',pt:'Polônia'},EGY:{en:'Egypt',pt:'Egito'},NOR:{en:'Norway',pt:'Noruega'},CIV:{en:'Ivory Coast',pt:'Costa do Marfim'},CMR:{en:'Cameroon',pt:'Camarões'},UKR:{en:'Ukraine',pt:'Ucrânia'},USA:{en:'United States',pt:'Estados Unidos'},BEL:{en:'Belgium',pt:'Bélgica'},BUL:{en:'Bulgaria',pt:'Bulgária'},SRB:{en:'Serbia',pt:'Sérvia'},LBR:{en:'Liberia',pt:'Libéria'},ALG:{en:'Algeria',pt:'Argélia'},KOR:{en:'South Korea',pt:'Coreia do Sul'},SEN:{en:'Senegal',pt:'Senegal'},NGA:{en:'Nigeria',pt:'Nigéria'},MAR:{en:'Morocco',pt:'Marrocos'},
- NED:{en:'Netherlands',pt:'Holanda'},COL:{en:'Colombia',pt:'Colômbia'},PER:{en:'Peru',pt:'Peru'},ECU:{en:'Ecuador',pt:'Equador'},QAT:{en:'Qatar',pt:'Catar'},TUR:{en:'Turkey',pt:'Turquia'}};
+ NED:{en:'Netherlands',pt:'Holanda'},COL:{en:'Colombia',pt:'Colômbia'},PER:{en:'Peru',pt:'Peru'},ECU:{en:'Ecuador',pt:'Equador'},QAT:{en:'Qatar',pt:'Catar'},TUR:{en:'Turkey',pt:'Turquia'},JPN:{en:'Japan',pt:'Japão'},RSA:{en:'South Africa',pt:'África do Sul'},UAE:{en:'United Arab Emirates',pt:'Emirados Árabes Unidos'}};
 const CONT={SA:{en:'South America',pt:'América do Sul'},EU:{en:'Europe',pt:'Europa'},NA:{en:'North America',pt:'América do Norte'}};
 const CITY={Lisbon:{en:'Lisbon',pt:'Lisboa'},Munich:{en:'Munich',pt:'Munique'},London:{en:'London',pt:'Londres'},Turin:{en:'Turin',pt:'Turim'},Milan:{en:'Milan',pt:'Milão'},Montevideo:{en:'Montevideo',pt:'Montevidéu'}};
 const CLUB={Bayern:{en:'Bayern Munich',pt:'Bayern de Munique'}};
@@ -1388,7 +1388,7 @@ const LEAGUE_NAME={BRA:yr('Brasileirão','Brasileirão'),ARG:yr('Argentine leagu
  CRO:yr('Croatian league','Liga Croata'),BIH:yr('Bosnian league','Liga Bósnia'),POL:yr('Ekstraklasa','Ekstraklasa'),NOR:yr('Eliteserien','Eliteserien'),MEX:yr('Liga MX','Liga MX'),
  COL:yr('Colombian league','Liga Colombiana'),HKG:yr('Hong Kong league','Liga de Hong Kong'),IND:yr('Indian Super League','Superliga Indiana'),AUS:yr('A-League','A-League'),
  UZB:yr('Uzbek league','Liga Uzbeque'),ANG:yr('Angolan league','Liga Angolana'),EGY:yr('Egyptian league','Liga Egípcia'),HUN:yr('Hungarian league','Liga Húngara'),SRB:yr('Serbian league','Liga Sérvia'),BEL:yr('Belgian league','Liga Belga'),DEN:yr('Danish league','Liga Dinamarquesa'),BUL:yr('Bulgarian league','Liga Búlgara'),CHI:yr('Chilean league','Liga Chilena'),LBR:yr('Liberian league','Liga Liberiana'),CMR:yr('Cameroonian league','Liga Camaronesa')};
-const CONT_OF=c=>({BRA:'southam',ARG:'southam',URU:'southam',COL:'southam',CHI:'southam',MEX:'northam',USA:'northam',KOR:'asia',CIV:'africa',EGY:'africa',CMR:'africa',LBR:'africa',ALG:'africa',SEN:'africa',NGA:'africa',MAR:'africa',QAT:'asia'})[c]||'europe';
+const CONT_OF=c=>({BRA:'southam',ARG:'southam',URU:'southam',COL:'southam',CHI:'southam',MEX:'northam',USA:'northam',KOR:'asia',CIV:'africa',EGY:'africa',CMR:'africa',LBR:'africa',ALG:'africa',SEN:'africa',NGA:'africa',MAR:'africa',QAT:'asia',JPN:'asia',UAE:'asia',RSA:'africa'})[c]||'europe';
 const POS={GK:yr('Goalkeeper','Goleiro'),CB:yr('Centre-back','Zagueiro'),FB:yr('Full-back','Lateral'),DM:yr('Defensive mid','Volante'),CM:yr('Central mid','Meio-campista'),AM:yr('Attacking mid','Meia'),WG:yr('Winger','Ponta'),ST:yr('Striker','Centroavante')};
 const SECTOR={GK:'DEF',CB:'DEF',FB:'DEF',DM:'MID',CM:'MID',AM:'MID',WG:'ATT',ST:'ATT'};
 const SECTOR_NAME={DEF:yr('Defence','Defesa'),MID:yr('Midfield','Meio-campo'),ATT:yr('Attack','Ataque')};
@@ -1396,13 +1396,14 @@ const SECTOR_NAME={DEF:yr('Defence','Defesa'),MID:yr('Midfield','Meio-campo'),AT
 const C10=["Zinedine Zidane","Ronaldinho","Steven Gerrard","Luis Suárez","Andrea Pirlo","Thierry Henry","Kaká","Gianluigi Buffon","Juan Román Riquelme","Kevin De Bruyne","Vinícius Júnior","Mohamed Salah"].map(p=>({p}));
 
 /* =================== DATES & STORAGE =================== */
-const SEED_MM=101,SEED_TT=202,SEED_C10=303,SEED_VAR=407;
+const SEED_MM=1201,SEED_TT=2202,SEED_C10=3303,SEED_VAR=4537;
 const LAUNCH=new Date(2026,9,10),DAY=864e5; // Rodada 1 = 10 Oct 2026
 function todayNum(){const d=new Date();const t=new Date(d.getFullYear(),d.getMonth(),d.getDate());return Math.max(1,Math.round((t-LAUNCH)/DAY)+1)}
 const mmP=num=>MM[num-1]||null;
 function dateOf(num){const d=new Date(LAUNCH);d.setDate(d.getDate()+num-1);return d}
 const fmtDate=d=>d.toLocaleDateString(loc(),{day:'2-digit',month:'short',year:'numeric'});
-const KEY='b2b-v1';
+const KEY='b2b-v2'; // season 2: everyone starts again from Rodada 1 (10 Oct 2026)
+const SEASON=2;
 let store={res:{},know:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.res){store=s;store.know=store.know||{}}}catch(e){}
 {const MIG={br:'c_BRA',england:'c_ENG',italy:'c_ITA',spain:'c_ESP',germany:'c_GER',france:'c_FRA',s70:'d1970'};Object.keys(store.know).forEach(k=>{if(MIG[k]){store.know[MIG[k]]=(store.know[MIG[k]]||0)+store.know[k];delete store.know[k]}})}
@@ -2148,6 +2149,110 @@ const VAR=[
   txt:yr("Brazil beat hosts Sweden 5–2 in the final to win their first World Cup. Pelé, aged 17, scored twice – one after flicking the ball over a defender – and dropped to his knees in tears at the end.",
    "O Brasil venceu a anfitriã Suécia por 5–2 na final e conquistou sua primeira Copa. Pelé, com 17 anos, marcou dois gols – um deles com chapéu no zagueiro – e caiu de joelhos, chorando, no fim do jogo.")}
 ];
+// VAR photos 11–35 (owner's sheet, checked; 21 corrected to the final at Estádio da Luz, Lisbon)
+VAR.push(
+ {img:'11',y:1966,lat:51.5560,lon:-0.2796,c:'ENG',st:yr('Wembley Stadium','Estádio de Wembley'),city:yr('London','Londres'),src:'El Gráfico',
+  title:yr("Hurst's hat-trick",'O hat-trick de Hurst'),topics:['wc','history','c_ENG','c_FRG','europe','d1960'],
+  txt:yr("England beat West Germany 4–2 after extra time in the World Cup final. Geoff Hurst scored three, including a shot off the crossbar that is still debated today.",
+   "A Inglaterra venceu a Alemanha Ocidental por 4–2 na prorrogação da final da Copa. Geoff Hurst marcou três, incluindo um chute no travessão que gera discussão até hoje.")},
+ {img:'12',y:2017,lat:41.9339,lon:12.4547,c:'ITA',st:yr('Stadio Olimpico','Estádio Olímpico'),city:yr('Rome','Roma'),src:'AFP',
+  title:yr("Totti's farewell",'A despedida de Totti'),topics:['clubs','players','c_ITA','europe','d2010'],
+  txt:yr("Francesco Totti played his last game for Roma, the only club of his 25-season career, in a 3–2 win over Genoa. The crowd held up his number 10 as he said goodbye.",
+   "Francesco Totti fez seu último jogo pela Roma, único clube em 25 temporadas de carreira, na vitória por 3–2 sobre o Genoa. A torcida ergueu o número 10 na despedida.")},
+ {img:'13',y:1977,lat:40.8128,lon:-74.0742,c:'USA',st:yr('Giants Stadium','Giants Stadium'),city:yr('East Rutherford','East Rutherford'),src:'AP Photo',
+  title:yr('Pelé in New York','Pelé em Nova York'),topics:['players','clubs','c_USA','c_BRA','northam','d1970'],
+  txt:yr("Pelé's last season with the New York Cosmos was their first at Giants Stadium, where crowds passed 70,000. He said goodbye there, playing one half for the Cosmos and one for Santos.",
+   "A última temporada de Pelé no New York Cosmos foi a primeira do clube no Giants Stadium, com públicos acima de 70 mil. Ele se despediu ali, jogando um tempo pelo Cosmos e outro pelo Santos.")},
+ {img:'14',y:2006,lat:52.5147,lon:13.2395,c:'GER',st:yr('Olympiastadion','Estádio Olímpico'),city:yr('Berlin','Berlim'),src:'Getty Images',
+  title:yr("Zidane's last act",'A despedida de Zidane'),topics:['wc','players','c_FRA','c_ITA','europe','d2000'],
+  txt:yr("In the last match of his career, Zinedine Zidane was sent off in extra time of the World Cup final for headbutting Marco Materazzi. Italy then beat France on penalties after a 1–1 draw.",
+   "No último jogo da carreira, Zinedine Zidane foi expulso na prorrogação da final da Copa por dar uma cabeçada em Marco Materazzi. A Itália venceu a França nos pênaltis, após o 1–1.")},
+ {img:'15',y:1970,lat:19.3029,lon:-99.1505,c:'MEX',st:yr('Estadio Azteca','Estádio Azteca'),city:yr('Mexico City','Cidade do México'),src:'Getty Images',
+  title:yr('Three-time champions','O tri'),topics:['wc','players','c_BRA','c_ITA','northam','d1970'],
+  txt:yr("Brazil beat Italy 4–1 in the final, became the first nation to win three World Cups and kept the Jules Rimet Trophy for good. Pelé, who opened the scoring, was carried off in a sombrero.",
+   "O Brasil venceu a Itália por 4–1 na final, foi o primeiro tricampeão mundial e ficou de vez com a Taça Jules Rimet. Pelé, que abriu o placar, saiu carregado de sombrero.")},
+ {img:'16',y:1998,lat:45.4608,lon:4.3903,c:'FRA',st:yr('Stade Geoffroy-Guichard','Estádio Geoffroy-Guichard'),city:yr('Saint-Étienne','Saint-Étienne'),src:'Bob Thomas / Getty Images',
+  title:yr('Beckham sees red','O vermelho de Beckham'),topics:['wc','players','c_ENG','c_ARG','europe','d1990'],
+  txt:yr("Early in the second half of the last-16 match against Argentina, David Beckham was sent off for flicking a kick at Diego Simeone. Ten-man England drew 2–2 and lost on penalties.",
+   "No começo do segundo tempo das oitavas contra a Argentina, David Beckham foi expulso por chutar Diego Simeone. Com dez, a Inglaterra empatou por 2–2 e caiu nos pênaltis.")},
+ {img:'17',y:2014,lat:-12.9787,lon:-38.5043,c:'BRA',st:yr('Arena Fonte Nova','Arena Fonte Nova'),city:yr('Salvador','Salvador'),src:'Getty Images',
+  title:yr('The Flying Dutchman','O Holandês Voador'),topics:['wc','players','c_NED','c_ESP','c_BRA','southam','d2010'],
+  txt:yr("Robin van Persie equalised with a long diving header, and the Netherlands went on to thrash reigning champions Spain 5–1. It was both teams' opening game of the World Cup.",
+   "Robin van Persie empatou com uma cabeçada em voo de longe, e a Holanda goleou a então campeã Espanha por 5–1. Era a estreia das duas seleções na Copa.")},
+ {img:'18',y:1994,lat:34.1613,lon:-118.1676,c:'USA',st:yr('Rose Bowl','Rose Bowl'),city:yr('Pasadena','Pasadena'),src:'Mike Powell / Getty Images',
+  title:yr('The fourth star','O tetra'),topics:['wc','national','c_BRA','c_ITA','northam','d1990'],
+  txt:yr("After a goalless final against Italy, Roberto Baggio sent the last penalty over the bar and Brazil won the shoot-out 3–2. Brazil became the first country to win four World Cups.",
+   "Depois do 0–0 na final contra a Itália, Roberto Baggio chutou o último pênalti por cima e o Brasil venceu a disputa por 3–2. Foi a primeira seleção tetracampeã do mundo.")},
+ {img:'19',y:2012,lat:53.4831,lon:-2.2004,c:'ENG',st:yr('Etihad Stadium','Etihad Stadium'),city:yr('Manchester','Manchester'),src:'Ed Garvey / Manchester City FC',
+  title:yr('Agüerooo!','Agüerooo!'),topics:['pl','clubs','players','c_ENG','c_ARG','europe','d2010'],
+  txt:yr("Manchester City trailed QPR 2–1 on the final day of the season, then scored twice in stoppage time. Sergio Agüero's winner gave City their first league title in 44 years.",
+   "O Manchester City perdia para o QPR por 2–1 na última rodada e marcou duas vezes nos acréscimos. O gol de Sergio Agüero deu ao City o primeiro título inglês em 44 anos.")},
+ {img:'20',y:2005,lat:-8.0420,lon:-34.8986,c:'BRA',st:yr('Estádio dos Aflitos','Estádio dos Aflitos'),city:yr('Recife','Recife'),src:'Diego Vara / CP Memória',
+  title:yr('The Battle of the Aflitos','A Batalha dos Aflitos'),topics:['clubs','history','c_BRA','southam','d2000'],
+  txt:yr("In the decisive Série B game against Náutico, Grêmio had four men sent off and conceded a late penalty. Galatto saved it, and Anderson scored the only goal to send Grêmio back up as champions.",
+   "No jogo decisivo da Série B contra o Náutico, o Grêmio teve quatro expulsos e sofreu um pênalti no fim. Galatto defendeu, e Anderson fez o único gol, levando o Grêmio de volta à elite como campeão.")},
+ {img:'21',y:2004,lat:38.7527,lon:-9.1847,c:'POR',st:yr('Estádio da Luz','Estádio da Luz'),city:yr('Lisbon','Lisboa'),src:'Alain Gadoffre / Getty Images',
+  title:yr('The Greek miracle','O milagre grego'),topics:['euro','national','c_GRE','c_POR','europe','d2000'],
+  txt:yr("Angelos Charisteas headed the only goal as Greece beat hosts Portugal 1–0 in the Euro final. The same two teams had opened the tournament, and Greece won that game too.",
+   "Angelos Charisteas fez de cabeça o único gol, e a Grécia venceu a anfitriã Portugal por 1–0 na final da Euro. As duas seleções também abriram o torneio, e a Grécia venceu aquele jogo também.")},
+ {img:'22',y:2012,lat:35.5100,lon:139.6062,c:'JPN',st:yr('International Stadium Yokohama','Estádio Internacional de Yokohama'),city:yr('Yokohama','Yokohama'),src:'Toshifumi Kitamura / AFP',
+  title:yr('Corinthians in Japan','A Fiel no Japão'),topics:['clubs','c_BRA','c_ENG','asia','d2010'],
+  txt:yr("Thousands of Corinthians fans crossed the world for the Club World Cup final against Chelsea. Paolo Guerrero headed the only goal, and Corinthians won their second world title.",
+   "Milhares de corinthianos atravessaram o mundo para a final do Mundial contra o Chelsea. Paolo Guerrero fez de cabeça o único gol, e o Corinthians conquistou seu segundo título mundial.")},
+ {img:'23',y:2005,lat:41.3809,lon:2.1228,c:'ESP',st:yr('Camp Nou','Camp Nou'),city:yr('Barcelona','Barcelona'),src:'FC Barcelona',
+  title:yr("Messi's first goal",'O primeiro gol de Messi'),topics:['players','clubs','c_ESP','c_ARG','europe','d2000'],
+  txt:yr("Aged 17, Lionel Messi chipped the goalkeeper from a Ronaldinho pass in a 2–0 win over Albacete. It was the first of his hundreds of goals for Barcelona.",
+   "Aos 17 anos, Lionel Messi encobriu o goleiro após passe de Ronaldinho na vitória por 2–0 sobre o Albacete. Foi o primeiro de suas centenas de gols pelo Barcelona.")},
+ {img:'24',y:2005,lat:45.4781,lon:9.1240,c:'ITA',st:yr('San Siro','San Siro'),city:yr('Milan','Milão'),src:'Stefano Rellandini',
+  title:yr('A derby on fire','O dérbi em chamas'),topics:['ucl','clubs','c_ITA','europe','d2000'],
+  txt:yr("The Champions League quarter-final between Inter and Milan was abandoned after flares rained onto the pitch, one of them hitting Milan goalkeeper Dida. UEFA awarded Milan the game 3–0.",
+   "As quartas da Champions entre Inter e Milan foram encerradas depois de uma chuva de sinalizadores no gramado, um deles atingindo o goleiro Dida, do Milan. A UEFA deu a vitória ao Milan por 3–0.")},
+ {img:'25',y:1977,lat:-22.8116,lon:-43.2011,c:'BRA',st:yr('Estádio Luso-Brasileiro','Estádio Luso-Brasileiro'),city:yr('Rio de Janeiro','Rio de Janeiro'),src:'Ronaldo Theobald',
+  title:yr('God in shorts','Deus de calção'),topics:['clubs','players','c_BRA','southam','d1970'],
+  txt:yr("Vasco fans reached through the railings to touch Roberto Dinamite as he walked back out for the second half against Portuguesa. Ronaldo Theobald's photo won Brazil's Prêmio Esso.",
+   "A torcida do Vasco esticou os braços pela grade para tocar Roberto Dinamite na volta para o segundo tempo contra a Portuguesa. A foto de Ronaldo Theobald ganhou o Prêmio Esso.")},
+ {img:'26',y:2014,lat:-19.8659,lon:-43.9711,c:'BRA',st:yr('Mineirão','Mineirão'),city:yr('Belo Horizonte','Belo Horizonte'),src:'Ian MacNicol / Getty Images',
+  title:yr('The 7–1','O 7 a 1'),topics:['wc','national','c_BRA','c_GER','southam','d2010'],
+  txt:yr("Germany scored five times in the first half-hour of the World Cup semi-final and beat hosts Brazil 7–1. With Neymar injured and Thiago Silva suspended, David Luiz wore the armband.",
+   "A Alemanha fez cinco gols na primeira meia hora da semifinal da Copa e goleou o Brasil, dono da casa, por 7–1. Com Neymar machucado e Thiago Silva suspenso, David Luiz foi o capitão.")},
+ {img:'27',y:1998,lat:48.9244,lon:2.3601,c:'FRA',st:yr('Stade de France','Stade de France'),city:yr('Saint-Denis','Saint-Denis'),src:'Getty Images',
+  title:yr('The Paris final','A final de Paris'),topics:['wc','players','c_BRA','c_FRA','europe','d1990'],
+  txt:yr("Hours after suffering a convulsive fit, Ronaldo started the World Cup final but was far below his best. Zinedine Zidane scored twice and hosts France won 3–0.",
+   "Horas depois de sofrer uma convulsão, Ronaldo começou jogando a final da Copa, mas longe do seu melhor. Zinedine Zidane fez dois gols e a anfitriã França venceu por 3–0.")},
+ {img:'28',y:1960,lat:41.3809,lon:2.1228,c:'ESP',st:yr('Camp Nou','Camp Nou'),city:yr('Barcelona','Barcelona'),src:'European Pressphoto Agency',
+  title:yr("Di Stéfano's Madrid",'O Real de Di Stéfano'),topics:['ucl','clubs','players','c_ESP','europe','d1960'],
+  txt:yr("Real Madrid and Barcelona met twice in the European Cup that year. Madrid won the semi-final on the way to a fifth straight title; months later, Barça became the first team to knock them out.",
+   "Real Madrid e Barcelona se enfrentaram duas vezes na Copa dos Campeões naquele ano. O Real venceu a semifinal a caminho do quinto título seguido; meses depois, o Barça foi o primeiro a eliminá-lo.")},
+ {img:'29',y:2010,lat:-26.2348,lon:27.9826,c:'RSA',st:yr('Soccer City','Soccer City'),city:yr('Johannesburg','Joanesburgo'),src:'Gallo / Getty Images',
+  title:yr("Africa's World Cup",'A Copa da África'),topics:['wc','national','c_RSA','c_MEX','africa','d2010'],
+  txt:yr("Siphiwe Tshabalala opened the first World Cup held in Africa with a fierce left-footed shot against Mexico. Rafael Márquez equalised, and the opening game ended 1–1.",
+   "Siphiwe Tshabalala abriu a primeira Copa disputada na África com um chutaço de canhota contra o México. Rafael Márquez empatou, e o jogo de abertura terminou 1–1.")},
+ {img:'30',y:2019,lat:-12.0556,lon:-76.9358,c:'PER',st:yr('Estadio Monumental','Estádio Monumental'),city:yr('Lima','Lima'),src:'AFP',
+  title:yr("Gabigol's two minutes",'Os minutos de Gabigol'),topics:['lib','clubs','c_BRA','c_ARG','c_PER','southam','d2010'],
+  txt:yr("Flamengo trailed River Plate 1–0 in the Libertadores final until the 89th minute, when Gabriel Barbosa scored twice to win the cup. It was the first final in the competition's history played as a single match.",
+   "O Flamengo perdia para o River Plate por 1–0 na final da Libertadores até os 44 do segundo tempo, quando Gabriel Barbosa marcou duas vezes. Foi a primeira final da competição em jogo único.")},
+ {img:'31',y:2022,lat:24.4528,lon:54.3922,c:'UAE',st:yr('Mohammed bin Zayed Stadium','Estádio Mohammed bin Zayed'),city:yr('Abu Dhabi','Abu Dhabi'),src:'Matthew Childs / Reuters',
+  title:yr("Chelsea's world title",'O Mundial do Chelsea'),topics:['clubs','c_ENG','c_BRA','asia','d2020'],
+  txt:yr("Chelsea beat Palmeiras 2–1 after extra time in the Club World Cup final, with Kai Havertz scoring a penalty in the 117th minute. It was the London club's first world title.",
+   "O Chelsea venceu o Palmeiras por 2–1 na prorrogação da final do Mundial de Clubes, com Kai Havertz convertendo um pênalti aos 117 minutos. Foi o primeiro título mundial do clube londrino.")},
+ {img:'32',y:2016,lat:52.6204,lon:-1.1422,c:'ENG',st:yr('King Power Stadium','King Power Stadium'),city:yr('Leicester','Leicester'),src:'Matt Dunham / Associated Press',
+  title:yr('The 5000–1 champions','Campeão a 5000 por 1'),topics:['pl','clubs','managers','c_ENG','c_ITA','europe','d2010'],
+  txt:yr("Leicester City, 5000–1 outsiders with bookmakers before the season, lifted the Premier League trophy under Claudio Ranieri. It was the first top-flight title in the club's history.",
+   "O Leicester City, cotado a 5000 por 1 nas casas de apostas antes da temporada, ergueu a taça da Premier League com Claudio Ranieri. Foi o primeiro título da primeira divisão na história do clube.")},
+ {img:'33',y:2011,lat:-23.9511,lon:-46.3388,c:'BRA',st:yr('Vila Belmiro','Vila Belmiro'),city:yr('Santos','Santos'),src:'Ivan Storti / Lancepress',
+  title:yr('Santos 4–5 Flamengo','Santos 4 x 5 Flamengo'),topics:['clubs','players','c_BRA','southam','d2010'],
+  txt:yr("Santos led 3–0 inside the first half-hour, but Ronaldinho scored a hat-trick and Flamengo won 5–4. One of Neymar's two goals that night won FIFA's Puskás Award.",
+   "O Santos abriu 3–0 na primeira meia hora, mas Ronaldinho fez três gols e o Flamengo venceu por 5–4. Um dos dois gols de Neymar naquela noite ganhou o Prêmio Puskás da FIFA.")},
+ {img:'34',y:1982,lat:41.3931,lon:2.1333,c:'ESP',st:yr('Sarrià Stadium','Estádio Sarriá'),city:yr('Barcelona','Barcelona'),src:'Aníbal Philot',
+  title:yr('The Sarrià Tragedy','A Tragédia do Sarriá'),topics:['wc','national','c_BRA','c_ITA','europe','d1980'],
+  txt:yr("Brazil only needed a draw to reach the semi-finals, but Paolo Rossi scored a hat-trick and Italy won 3–2. The Italians went on to win the World Cup.",
+   "O Brasil jogava pelo empate para ir à semifinal, mas Paolo Rossi fez três gols e a Itália venceu por 3–2. Os italianos depois foram campeões do mundo.")},
+ {img:'35',y:1997,lat:45.7238,lon:4.8322,c:'FRA',st:yr('Stade de Gerland','Estádio de Gerland'),city:yr('Lyon','Lyon'),src:'Tony Marshall / EMPICS',
+  title:yr('The impossible free kick','A falta impossível'),topics:['players','national','c_BRA','c_FRA','europe','d1990'],
+  txt:yr("Roberto Carlos struck a free kick from about 35 metres that swerved around the wall and in. The goal came in a 1–1 draw with France at a pre-World Cup tournament.",
+   "Roberto Carlos cobrou uma falta de cerca de 35 metros que fez a curva por fora da barreira e entrou. O gol saiu no 1–1 com a França, num torneio preparatório para a Copa.")}
+);
+
 const varDay=n=>VAR[n-1]||null;
 // Fresh order for every game from Rodada 1 (fixed seeds, so everyone gets the same puzzle each day)
 function reorder(a,seed){const x=shuffled(a,seed);a.splice(0,a.length,...x)}
@@ -2230,14 +2335,14 @@ class WMap{
   const loc=e=>{const r=el.getBoundingClientRect();return[e.clientX-r.left,e.clientY-r.top]};
   el.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;try{el.setPointerCapture(e.pointerId)}catch(_){}P.set(e.pointerId,loc(e));if(P.size===1){moved=0;t0=Date.now();multi=false}else multi=true});
   el.addEventListener('pointermove',e=>{if(!P.has(e.pointerId))return;const before=[...P.values()].map(p=>p.slice()),cur=loc(e),prev=P.get(e.pointerId);P.set(e.pointerId,cur);
-   if(P.size===1){moved+=Math.hypot(cur[0]-prev[0],cur[1]-prev[1]);if(moved>6)this.panBy(cur[0]-prev[0],cur[1]-prev[1])}
+   if(P.size===1){moved+=Math.hypot(cur[0]-prev[0],cur[1]-prev[1]);if(moved>6){this.panBy(cur[0]-prev[0],cur[1]-prev[1]);this.o.onMove&&this.o.onMove()}}
    else if(P.size===2){const after=[...P.values()],mid=a=>[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2],dist=a=>Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])||1;
-    const m0=mid(before),m1=mid(after);this.panBy(m1[0]-m0[0],m1[1]-m0[1]);this.zoomAt(m1,dist(after)/dist(before));moved=99}});
+    const m0=mid(before),m1=mid(after);this.panBy(m1[0]-m0[0],m1[1]-m0[1]);this.zoomAt(m1,dist(after)/dist(before));moved=99;this.o.onMove&&this.o.onMove()}});
   const up=e=>{if(!P.has(e.pointerId))return;const p=loc(e);P.delete(e.pointerId);
    if(P.size===0&&!multi&&moved<=6&&Date.now()-t0<700&&this.o.pick){const lat=wmLat(this.y0+p[1]/this.s),lon=wmLon(this.x0+p[0]/this.s);this.pin=[+lat.toFixed(4),+lon.toFixed(4)];this.draw();this.o.onPin&&this.o.onPin(this.pin)}};
   el.addEventListener('pointerup',up);el.addEventListener('pointercancel',e=>{P.delete(e.pointerId);multi=true});
-  el.addEventListener('wheel',e=>{e.preventDefault();this.zoomAt(loc(e),Math.exp(-Math.max(-60,Math.min(60,e.deltaY))*.006))},{passive:false});
-  el.addEventListener('dblclick',e=>{e.preventDefault();this.zoomAt(loc(e),2,true)});
+  el.addEventListener('wheel',e=>{e.preventDefault();this.zoomAt(loc(e),Math.exp(-Math.max(-60,Math.min(60,e.deltaY))*.006));this.o.onMove&&this.o.onMove()},{passive:false});
+  el.addEventListener('dblclick',e=>{e.preventDefault();this.zoomAt(loc(e),2,true);this.o.onMove&&this.o.onMove()});
  }
  draw(){if(this.raf)return;this.raf=requestAnimationFrame(()=>{this.raf=0;this.render()})}
  render(){
@@ -2356,7 +2461,7 @@ function varPlay(){
   <div class="vg-card" id="vcard"></div>
  </section>`,true);
  const pp=new PhotoPan($('#vgp'),$('#vgp img'));
- const big=new WMap($('#vgm'),{pick:true,interactive:true,pin:VS.pin,onPin:p=>{VS.pin=p;varSync()}});
+ const big=new WMap($('#vgm'),{pick:true,interactive:true,pin:VS.pin,onPin:p=>{VS.pin=p;varSync()},onMove:()=>{VS.moved=true;$('#vgc').classList.remove('show')}});
  const mini=new WMap($('#vthm'),{nolabels:true,pin:VS.pin});
  VAR_VIEW.push(pp,big,mini);VS.pp=pp;VS.big=big;VS.mini=mini;
  // year slider
@@ -2378,7 +2483,7 @@ function varMode(m,first){
  $('#vtag').textContent=m==='map'?T('Photo','Foto'):T('Place pin','Marcar local');
  const c=$('#vgc');
  if(m==='photo'){c.innerHTML=`${VAR_IC.pan}${T('Pan & zoom','Arraste e dê zoom')}`;c.classList.toggle('show',!!first)}
- else{c.innerHTML=`${T('Tap to place pin','Toque para marcar')}`;c.classList.toggle('show',!VS.pin)}
+ else{c.innerHTML=`${T('Tap to place pin','Toque para marcar')}`;c.classList.toggle('show',!VS.pin&&!VS.moved)}
  if(m==='photo'){VS.mini.pin=VS.pin;VS.mini.home()}
 }
 function varSetYear(y){
@@ -2390,7 +2495,7 @@ function varSync(){
  kn.style.left=`calc(10px + ${f} * (100% - 20px))`;$('#vfill').style.width=y==null?'0':`calc(10px + ${f} * (100% - 20px))`;kn.classList.toggle('set',y!=null);
  lb.textContent=y==null?'––––':y;lb.classList.toggle('set',y!=null);$('#vslab').textContent=y==null?T('Pick the year','Escolha o ano'):T('Year','Ano');
  tr.setAttribute('aria-valuenow',y??VAR_MID);tr.setAttribute('aria-valuetext',y==null?T('No year chosen','Nenhum ano escolhido'):String(y));
- if(VS.mode==='map')$('#vgc').classList.toggle('show',!VS.pin);
+ if(VS.mode==='map')$('#vgc').classList.toggle('show',!VS.pin&&!VS.moved);
  $('#vgo').classList.toggle('ready',!!VS.pin&&y!=null);
  const nh=VS.hints.length,hb=$('#vhint');hb.disabled=nh>=VAR_HINTS.length;hb.title=T('Each hint costs one medal','Cada dica custa uma medalha');
  hb.setAttribute('aria-label',nh>=VAR_HINTS.length?T('No hints left','Sem dicas'):T('Use a hint. It costs one medal.','Usar uma dica. Custa uma medalha.'));
@@ -2551,7 +2656,7 @@ let pushChain=Promise.resolve();
 function cloudPush(){
  if(!sb||!session||syncedFor!==session.user.id)return;
  const uid=session.user.id,rows=[];
- Object.keys(store.res).forEach(k=>{if(pushed.has(k))return;const s=splitKey(k);if(!s)return;pushed.add(k);rows.push({user_id:uid,game:s.g,day:s.n,data:store.res[k]})});
+ Object.keys(store.res).forEach(k=>{if(pushed.has(k))return;const s=splitKey(k);if(!s)return;pushed.add(k);rows.push({user_id:uid,game:s.g,day:s.n,data:{...store.res[k],s:SEASON}})});
  if(!rows.length)return;
  pushChain=pushChain.then(()=>sb.from('results').upsert(rows,{onConflict:'user_id,game,day'})).then(({error})=>{if(error){rows.forEach(r=>pushed.delete(r.game+r.day));syncNote='err'}else syncNote='ok'}).catch(()=>{rows.forEach(r=>pushed.delete(r.game+r.day));syncNote='err'});
 }
@@ -2560,7 +2665,7 @@ async function syncAll(){
  const{data:rows,error}=await sb.from('results').select('game,day,data').eq('user_id',uid);
  if(error)throw error;
  pushed=new Set();
- rows.forEach(r=>{const k=r.game+r.day;if(!store.res[k])store.res[k]=r.data;pushed.add(k)});
+ rows.forEach(r=>{if(!r.data||r.data.s!==SEASON)return;const k=r.game+r.day;if(!store.res[k])store.res[k]=r.data;pushed.add(k)});
  recomputeKnow();syncedFor=uid;save();syncNote='ok';
 }
 async function loadProfile(){const{data:p,error}=await sb.from('profiles').select('username').eq('id',session.user.id).maybeSingle();if(error)throw error;profile=p||null}
@@ -2591,7 +2696,7 @@ async function loadSocial(){
   const{data:ps,error:e1}=await sb.from('profiles').select('id,username').in('id',ids);if(e1)throw e1;ps.forEach(p=>names[p.id]=p.username);
   const fr=links.filter(l=>l.status==='accepted').map(other);
   if(fr.length){const{data:rows,error:e2}=await sb.from('results').select('user_id,game,day,data').in('user_id',fr);if(e2)throw e2;
-   fr.forEach(f=>res[f]={});rows.forEach(r=>{(res[r.user_id]||(res[r.user_id]={}))[r.game+r.day]=r.data})}
+   fr.forEach(f=>res[f]={});rows.forEach(r=>{if(!r.data||r.data.s!==SEASON)return;(res[r.user_id]||(res[r.user_id]={}))[r.game+r.day]=r.data})}
  }
  social={loaded:true,links,names,res};
 }
