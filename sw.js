@@ -1,6 +1,6 @@
 // Box to Box service worker: makes the game installable and playable offline.
 // Change VERSION whenever you upload new files so every player gets them.
-const VERSION = "b2b-v8";
+const VERSION = "b2b-v9";
 const SHELL = [
   "./", "./index.html", "./config.js", "./privacy.html", "./manifest.webmanifest",
   "./data/wmap.js", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"

@@ -1414,9 +1414,13 @@ const mmP=num=>MM[num-1]||null;
 function dateOf(num){const d=new Date(LAUNCH);d.setDate(d.getDate()+num-1);return d}
 const fmtDate=d=>d.toLocaleDateString(loc(),{day:'2-digit',month:'short',year:'numeric'});
 const KEY='b2b-v4'; // season 4: everyone starts again from Rodada 1 (10 Oct 2026)
-const SEASON=4;
+const SEASON=5;
+// Season 5 = reshuffle from Rodada 2 (11 Oct 2026). Rodada 1 results from season 4 stay valid.
+const okRow=r=>r.data&&(r.data.s===SEASON||(r.data.s===4&&r.day<2));
 let store={res:{},know:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.res){store=s;store.know=store.know||{}}}catch(e){}
+// Puzzles from Rodada 2 on were reshuffled: drop any result saved for them before the change
+if(store.mig!==5){Object.keys(store.res).forEach(k=>{const m=/^(mm|tt|c10|var)(\d+)$/.exec(k);if(m&&+m[2]>=2)delete store.res[k]});store.mig=5;try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
 {const MIG={br:'c_BRA',england:'c_ENG',italy:'c_ITA',spain:'c_ESP',germany:'c_GER',france:'c_FRA',s70:'d1970'};Object.keys(store.know).forEach(k=>{if(MIG[k]){store.know[MIG[k]]=(store.know[MIG[k]]||0)+store.know[k];delete store.know[k]}})}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}try{cloudPush()}catch(e){}}
 const R=(g,n)=>store.res[g+n];
@@ -2835,6 +2839,8 @@ MM.forEach(p=>{const r=MM_REDO[p.theme.en];if(r){const{items,...rest}=r;Object.a
 reorder(MM,SEED_MM);reorder(TKD,SEED_TT);reorder(C10,SEED_C10);reorder(VAR,SEED_VAR);
 // Season 4 order (seeds chosen so similar themes and same-country items never fall on consecutive days)
 reorder(MM,5122);reorder(TKD,6216);reorder(C10,7305);reorder(VAR,8420);
+// Season 5: Rodada 1 stays, everything from Rodada 2 on is reshuffled
+const keep1=(a,s)=>{const x=shuffled(a.slice(1),s);a.splice(1,a.length-1,...x)};keep1(MM,9103);keep1(TKD,9236);keep1(C10,9311);keep1(VAR,9405);
 
 const VAR_MIN=1900,VAR_MAX=2026,VAR_HINTS=['country','decade'];
 const varPlace=d=>`${L(d.st)} | ${L(d.city)} | ${L(CTRY[d.c])}`;
@@ -3246,7 +3252,7 @@ async function syncAll(){
  const{data:rows,error}=await sb.from('results').select('game,day,data').eq('user_id',uid);
  if(error)throw error;
  pushed=new Set();
- rows.forEach(r=>{if(!r.data||r.data.s!==SEASON)return;const k=r.game+r.day;if(!store.res[k])store.res[k]=r.data;pushed.add(k)});
+ rows.forEach(r=>{if(!okRow(r))return;const k=r.game+r.day;if(!store.res[k])store.res[k]=r.data;pushed.add(k)});
  recomputeKnow();syncedFor=uid;save();syncNote='ok';
 }
 async function loadProfile(){const{data:p,error}=await sb.from('profiles').select('username').eq('id',session.user.id).maybeSingle();if(error)throw error;profile=p||null}
@@ -3277,7 +3283,7 @@ async function loadSocial(){
   const{data:ps,error:e1}=await sb.from('profiles').select('id,username').in('id',ids);if(e1)throw e1;ps.forEach(p=>names[p.id]=p.username);
   const fr=links.filter(l=>l.status==='accepted').map(other);
   if(fr.length){const{data:rows,error:e2}=await sb.from('results').select('user_id,game,day,data').in('user_id',fr);if(e2)throw e2;
-   fr.forEach(f=>res[f]={});rows.forEach(r=>{if(!r.data||r.data.s!==SEASON)return;(res[r.user_id]||(res[r.user_id]={}))[r.game+r.day]=r.data})}
+   fr.forEach(f=>res[f]={});rows.forEach(r=>{if(!okRow(r))return;(res[r.user_id]||(res[r.user_id]={}))[r.game+r.day]=r.data})}
  }
  social={loaded:true,links,names,res};
 }
