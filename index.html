@@ -719,6 +719,9 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .vg-ctrl.min .vg-hide svg{transform:rotate(180deg)}
 .vg-ctrl.min .vg-console{opacity:0;pointer-events:none}
 .vg-console{transition:opacity .3s}
+.ft-k{display:block;font:700 11px/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 4px}
+.ft-k b{color:var(--fg);font-weight:800}
+#tkact #tprev{flex:0 0 52px;padding:0}
 .vg-tip{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;border-radius:8px!important;border-left:3px solid var(--c5)}
 .vc-photo{border:2px solid var(--c5)!important;border-radius:12px!important}
 .vc-chip{background:rgba(8,12,11,.86)!important;color:#fff!important;border-left:3px solid var(--c5);border-radius:4px!important}
@@ -897,7 +900,7 @@ const MM=[
   ["Miroslav Klose","GER",16,"GER","Scored at four World Cups, from 2002 to 2014.","Marcou em quatro Copas, de 2002 a 2014."],
   ["Ronaldo","BRA",15,"BRA","Eight came in 2002, including both goals in the final.","Oito vieram em 2002, incluindo os dois da final."],
   ["Gerd Müller","FRG",14,"GER","Ten in 1970, then the winner in the 1974 final.","Dez em 1970 e o gol do título na final de 1974."],
-  ["Just Fontaine","FRA",13,"FRA","Every one of them came at a single tournament, in 1958.","Todos eles saíram numa única Copa, a de 1958."],
+  ["Just Fontaine","FRA",13,"FRA","All of his World Cup goals came at a single tournament, in 1958.","Todos os seus gols em Copas saíram num único torneio, o de 1958."],
   ["Pelé","BRA",12,"BRA","Scored at four World Cups and won three.","Marcou em quatro Copas e venceu três."],
   ["Cristiano Ronaldo","POR",11,"POR","Has played at six World Cups, from 2006 to 2026.","Disputou seis Copas do Mundo, de 2006 a 2026."],
   ["Gary Lineker","ENG",10,"ENG","Top scorer at Mexico 1986 with six.","Artilheiro da Copa de 1986, com seis gols."],
@@ -1733,8 +1736,9 @@ function mmGuess(){
  slotEl(win).querySelector('.badge').innerHTML=ICON.check;slotEl(lose).querySelector('.badge').innerHTML=ICON.x;
  // Only the knocked-out card reveals its number; the winner's stays hidden until the recap.
  const wTxt=p.higher?T(`more than ${Lo.v.toLocaleString(loc())} ${L(p.unit)}`,`mais de ${Lo.v.toLocaleString(loc())} ${L(p.unit)}`):T(`before ${Lo.v}`,`antes de ${Lo.v}`);
- $('#verdict').innerHTML=`<h2 class="fade ${ok?'ok':'no'}">${ok?'Golaço!':'Na trave!'}<small>${ok?T("That's right",'Acertou'):T('Not quite','Quase')}</small></h2><div class="box fade"><span class="vals"><span class="w">${nm(W)} · ${wTxt}</span><span class="out">${nm(Lo)} · ${fmtV(p,Lo.v)}</span></span><span id="ft"></span></div>`;
- syncText($('#ft'),Lo.f,.8);
+ $('#verdict').innerHTML=`<h2 class="fade ${ok?'ok':'no'}">${ok?'Golaço!':'Na trave!'}<small>${ok?T("That's right",'Acertou'):T('Not quite','Quase')}</small></h2><div class="box fade"><span class="vals"><span class="w">${nm(W)} · ${wTxt}</span><span class="out">${nm(Lo)} · ${fmtV(p,Lo.v)}</span></span><span class="ft-k">${T('About the knocked-out card','Sobre a carta eliminada')}</span><span id="ft"></span></div>`;
+ const nmIn=l=>Lo.n.startsWith('@')?CTRY[Lo.n.slice(1)][l]:Lo.n;
+ syncText($('#ft'),yr(`${nmIn('en')}: ${Lo.f.en}`,`${nmIn('pt')}: ${Lo.f.pt}`),.8);
  mmRender();$('#main').focus();
 }
 function mmAdvance(){
@@ -1852,7 +1856,15 @@ function tkRender(){
  let p='';for(let i=0;i<4;i++){const lg=TS.log[i];p+=`<span class="pip ${lg?(lg.g===1&&lg.h===0?'ok':'bad'):i===ri?'now':''}"></span>`}$('#pips').innerHTML=p;
  // bottom
  const bot=$('#tkbottom');
- if(TS.solved){
+ if(TS.solved&&TS.review){
+  bot.className='tk-done';
+  const lg=TS.log[ri]||{g:0,h:0};
+  bot.innerHTML=`<h2 class="fade">${L(RN[ri].f)}</h2><p id="tdp"></p>`;
+  syncText($('#tdp'),yr(`Solved with ${lg.g} guess${lg.g===1?'':'es'} and ${lg.h} hint${lg.h===1?'':'s'}.`,`Resolvido com ${lg.g} chute${lg.g===1?'':'s'} e ${lg.h} dica${lg.h===1?'':'s'}.`));
+  $('#tkact').innerHTML=`${ri?`<button class="btn ghost" id="tprev" aria-label="${T('Previous round','Fase anterior')}">${ICON.back}</button>`:''}<button class="btn" id="tnext">${ri===3?T('Continue','Continuar'):`${L(RN[ri+1].s)} ${ICON.arrow}`}</button>`;
+  $('#tnext').onclick=()=>ri===3?afterGame():ttRecap(TS.num,ri+1);
+  if(ri)$('#tprev').onclick=()=>ttRecap(TS.num,ri-1);
+ }else if(TS.solved){
   const last=ri===3;
   bot.className='tk-done';
   bot.innerHTML=`<h2 class="fade">${TS.g===1&&TS.h===0?'Golaço!':T('Solved!','Resolvido!')}</h2><p id="tdp"></p>`;
@@ -1944,6 +1956,19 @@ function ttRules(){modal(T('How to play','Como jogar'),[
  yr('Drag the top card onto a slot, or tap an empty slot. Drag placed cards to swap them.','Arraste a carta até um espaço ou toque num espaço vazio. Arraste as cartas para trocá-las.'),
  yr('Press Guess to learn how many cards are wrong, but not which ones.','Aperte Chutar para saber quantas cartas estão erradas, mas não quais.'),
  yr('Hints mark the wrong cards in red. You get three for all four rounds.','As dicas marcam em vermelho as erradas. São três para as quatro fases.')])}
+function ttRecap(num,ri){
+ const d=tkDay(num),res=R('tt',num);if(!res)return ttResult(num);
+ app.innerHTML=`<section class="screen" id="tk">
+  <div class="bar"><button class="iconbtn" id="bk" aria-label="${T('Back to home','Voltar ao início')}">${ICON.back}</button><div class="board"><span class="rd" id="round"></span><span class="pips" id="pips"></span></div><span style="width:40px"></span></div>
+  <div class="tk-theme">Tiki-Taka · ${L(d.theme)}</div>
+  <div class="tk-wrap"><div class="tk-board" id="tkb"></div><div class="tk-hist" id="tkhist"></div><div id="tkbottom" class="tk-done"></div></div>
+  <div class="actions tk-actions" id="tkact"></div>
+ </section>`;
+ $('#bk').onclick=home;
+ const r=d.rounds[ri],n=r.cards.length;
+ TS={num,d,ri,r,lay:TLAY[n],review:true,log:res.rounds,hintsLeft:0,slots:[...Array(n).keys()],locked:Array(n).fill(true),deck:[],solved:true,wrong:[],hist:[],g:0,h:0};
+ tkRender();
+}
 function ttResult(num){
  const d=tkDay(num),r=R('tt',num),pen=tkPen(r),acc=tkAcc(r),hints=r.rounds.reduce((a,x)=>a+x.h,0),mis=pen-hints;
  app.innerHTML=`<section class="screen result"><div class="beams" aria-hidden="true"></div>
@@ -1957,7 +1982,7 @@ function ttResult(num){
   <div class="spacer"></div><div id="shareSlot"></div>
   <div class="actions"><button class="btn ghost" id="share">${ICON.share}${T('Share','Compartilhar')}</button></div>
   <button class="textbtn" id="cont">${T('Continue','Continuar')}</button></section>`;
- $('#bk').onclick=home;$('#cont').onclick=afterGame;
+ $('#bk').onclick=home;$('#cont').onclick=()=>ttRecap(num,0);
  $('#share').onclick=()=>copyShare(`Box to Box · Tiki-Taka ${num}\n${L(d.theme)}\n${r.rounds.map((x,i)=>`${i+1}. ${'🟥'.repeat(Math.max(x.g-1,0))}${x.g?'🟩':''}${'💡'.repeat(x.h)}`).join('\n')}\n${acc}% ${T('accuracy','de acerto')}`);
 }
 window.addEventListener('resize',()=>{if(document.getElementById('tk')&&TS&&!TS.solved)tkRender()});
@@ -1995,9 +2020,9 @@ const POS_XY={GK:[20,47],CB:[20,39],FB:[8,36],DM:[20,31],CM:[20,26],AM:[20,19],W
 function pitchSVG(pos){const [x,y]=POS_XY[pos];return `<svg viewBox="0 0 40 54" aria-hidden="true"><rect x="1" y="1" width="38" height="52" rx="3" fill="#2E7D46" stroke="#F3EEE2" stroke-width="1.5"/><path d="M1 27h38" stroke="#F3EEE2" stroke-width="1.2"/><circle cx="20" cy="27" r="5" fill="none" stroke="#F3EEE2" stroke-width="1.2"/><path d="M12 1v7h16V1M12 53v-7h16v7" fill="none" stroke="#F3EEE2" stroke-width="1.2"/><circle cx="${x}" cy="${y}" r="4" fill="#FFB23F" stroke="#111512" stroke-width="1.5"/>${pos==='FB'||pos==='WG'?`<circle cx="${40-x}" cy="${y}" r="4" fill="#FFB23F" stroke="#111512" stroke-width="1.5" opacity=".45"/>`:''}</svg>`}
 let C1=null;
 const c10Used=()=>C1.guesses.length+C1.hints.length;
-function c10Start(num){
+function c10Start(num,review){
  const day=c10Day(num),m=plBy(day.p),saved=R('c10',num);
- C1={num,day,m,guesses:saved?saved.guesses.slice():[],hints:saved?(saved.hints||[]).slice():[],done:!!saved};
+ C1={num,review:!!(review&&saved),day,m,guesses:saved?saved.guesses.slice():[],hints:saved?(saved.hints||[]).slice():[],done:!!saved};
  app.innerHTML=`<section class="screen" id="c10">
   <div class="bar"><button class="iconbtn" id="bk" aria-label="${T('Back to home','Voltar ao início')}">${ICON.back}</button><span class="gtitle">Camisa 10</span><button class="iconbtn" id="inf" aria-label="${T('How to play','Como jogar')}">${ICON.info}</button></div>
   <div class="c10-target" id="ctarget"></div>
@@ -2047,13 +2072,13 @@ function c10Render(){
   <div class="c10-known">${cell(C10_ICON.nat,T('Country','País'),natVal,k.nat?'r':k.cont?'c':'')}${cell(C10_ICON.pos,T('Position','Posição'),posVal,k.pos?'r':k.sector?'c':'')}${cell(C10_ICON.year,T('Born','Nascimento'),yearVal,yearSt)}${cell(C10_ICON.club,T('Clubs','Clubes'),clubVal,k.clubs.size?'r':k.leagues.size?'c':'')}</div>`;
  const left=C10_MAX-c10Used();
  let pips='';for(let i=0;i<C10_MAX;i++){const g=C1.guesses[i-C1.hints.length];pips+=`<i class="${i<C1.hints.length?'hint':i<c10Used()?(g===m[0]?'ok':'used'):''}"></i>`}
- $('#cleft').innerHTML=over?`<button class="btn" id="cres">${T('See result','Ver resultado')} ${ICON.arrow}</button>`:`<span class="pp">${pips}</span><span>${left} ${left===1?T('guess left','chute restante'):T('guesses left','chutes restantes')}</span>`;
+ $('#cleft').innerHTML=over?`<button class="btn" id="cres">${C1.review?T('Continue','Continuar'):T('See result','Ver resultado')} ${ICON.arrow}</button>`:`<span class="pp">${pips}</span><span>${left} ${left===1?T('guess left','chute restante'):T('guesses left','chutes restantes')}</span>`;
  document.querySelector('.c10-input').hidden=over;
  const hb=$('#chint'),nextHint=C1.hints.length;
  hb.innerHTML=`${C10_ICON.bulb}<span>${T('Hint','Dica')}</span><small>${nextHint<C10_HINTS.length?`−1 ${T('guess','chute')}`:T('none left','acabou')}</small>`;
  hb.disabled=over||nextHint>=C10_HINTS.length||left<=1;
  hb.setAttribute('aria-label',T('Use a hint. It costs one guess.','Usar uma dica. Custa um chute.'));
- if(over)$('#cres').onclick=()=>c10Result(C1.num);
+ if(over)$('#cres').onclick=()=>C1.review?afterGame():c10Result(C1.num);
  const st=v=>v===2?'r':v===1?'c':'w';
  $('#cgs').innerHTML=[...C1.guesses].reverse().map((n,i)=>{const g=plBy(n),c=c10Compare(g,m);
   const clubLbl=c.club===2?c.shared[0]:c.club===1?L(LEAGUE_NAME[c.sharedLg[0]]):T('No match','Nada em comum');
@@ -2108,7 +2133,7 @@ function c10Result(num){
   <div class="spacer"></div><div id="shareSlot"></div>
   <div class="actions"><button class="btn ghost" id="share">${ICON.share}${T('Share','Compartilhar')}</button></div>
   <button class="textbtn" id="cont">${T('Continue','Continuar')}</button></section>`;
- $('#bk').onclick=home;$('#cont').onclick=afterGame;
+ $('#bk').onclick=home;$('#cont').onclick=()=>c10Start(num,true);
  $('#share').onclick=()=>copyShare(`Box to Box · Camisa 10 ${num}\n${r.guesses.map(n=>{const c=c10Compare(plBy(n),m);return em(c.nat)+em(c.pos)+em(c.year)+em(c.club)}).join('\n')}${nh?'\n'+'💡'.repeat(nh):''}\n${r.win?`${r.guesses.length}/${C10_MAX}`:`✗/${C10_MAX}`}`);
 }
 
@@ -2816,7 +2841,7 @@ const varPlace=d=>`${L(d.st)} | ${L(d.city)} | ${L(CTRY[d.c])}`;
 
 // ---- scoring: each dimension gets a level 0–4, the medal is the average (rounded up) plus one level per hint ----
 const varTL=yd=>yd===0?0:yd<=2?1:yd<=5?2:yd<=10?3:4;
-const varSL=km=>km<=50?0:km<=300?1:km<=1000?2:km<=3000?3:4;
+const varSL=km=>km<=100?0:km<=300?1:km<=1000?2:km<=3000?3:4;
 const varLevel=r=>Math.min(4,Math.ceil((varTL(r.yd)+varSL(r.km))/2)+(r.hints||[]).length);
 const varPen=r=>[0,1,3,5,7][varLevel(r)];
 const fmtKm=km=>km<1?'< 1 km':`${Math.round(km).toLocaleString(loc())} km`;
@@ -3140,7 +3165,7 @@ function varRecap(num){
 function varRules(){modal(T('How to play','Como jogar'),[
  yr('Look at the photo: where and when was it taken? Drag and zoom to find clues.','Olhe a foto: onde e quando ela foi tirada? Arraste e dê zoom para achar pistas.'),
  yr('Tap the small map to open it, drop your pin and pick the year.','Toque no mapinha para abrir, marque o local e escolha o ano.'),
- yr('Trophy: the exact year and a pin within 50 km. Otherwise your medal mixes both: the closer, the better.','Troféu: o ano exato e um ponto a até 50 km. Senão, a medalha mistura os dois: quanto mais perto, melhor.'),
+ yr('Trophy: the exact year and a pin within 100 km. Otherwise your medal mixes both: the closer, the better.','Troféu: o ano exato e um ponto a até 100 km. Senão, a medalha mistura os dois: quanto mais perto, melhor.'),
  yr('Year bands: 2, 5 and 10 years off. Distance bands: 300, 1,000 and 3,000 km.','Faixas de ano: 2, 5 e 10 anos de erro. Faixas de distância: 300, 1.000 e 3.000 km.'),
  yr('Stuck? Each hint (country, then decade) costs one medal.','Travou? Cada dica (país, depois década) custa uma medalha.')])}
 
