@@ -654,6 +654,13 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .ma svg{width:26px;height:auto}
 .ma.none{color:var(--muted);font:700 14px var(--ui)}
 .ma.lock svg{width:16px;color:var(--muted)}
+.rank{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.rrow{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 12px 8px 10px}
+.rrow.me{border-color:#4A3A1C;background:#1A1912}
+.rpos{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font:900 15px var(--display);color:var(--muted);border:1px solid var(--line)}
+.rpos.p1{background:var(--gold);color:#1A1206;border-color:transparent}.rpos.p2{background:var(--silver);color:#14171A;border-color:transparent}.rpos.p3{background:var(--bronze);color:#1A0E06;border-color:transparent}
+.rpts{font:900 24px/1 var(--display);font-variant-numeric:tabular-nums;text-align:right}
+.rpts small{font:700 11px var(--ui);color:var(--muted);margin-left:3px;letter-spacing:.04em}
 .fnote{font:500 12.5px/1.4 var(--ui);color:var(--muted);margin:8px 0 0}
 .vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:20px 0 6px;text-align:center}
 .vs>div{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
@@ -3538,6 +3545,18 @@ function usernameScreen(first){
 }
 
 // ---- friends screens ----
+// ---- Friends ranking: points for games played on their own day (trophy 5 · gold 3 · silver 2 · bronze 1)
+let rankTab='week';
+const tierPts=pen=>{const t=tier(pen);return t.k==='cup'?5:t.k==='medal'?[0,3,2,1][t.n]:0};
+function rankOf(res,from,to){let pts=0,games=0,cups=0;Object.keys(res).forEach(k=>{const m=/^(mm|tt|c10|var)(\d+)$/.exec(k);if(!m)return;const n=+m[2],r=res[k];if(n<from||n>to||!r||!r.onDay)return;const pen=resPen(m[1],r);pts+=tierPts(pen);games++;if(pen===0)cups++});return{pts,games,cups}}
+function rankHTML(ids){
+ const n=todayNum(),from=rankTab==='week'?Math.max(1,n-(new Date().getDay()+6)%7):1;
+ const rows=ids.map(id=>({id,name:id?nameOf(id):profile.username,...rankOf(id?social.res[id]||{}:store.res,from,n)})).sort((a,b)=>b.pts-a.pts||b.cups-a.cups||a.name.localeCompare(b.name));
+ let pos=0;rows.forEach((r,i)=>{if(!i||r.pts!==rows[i-1].pts||r.cups!==rows[i-1].cups)pos=i+1;r.pos=pos});
+ return `<div class="seg" role="group" aria-label="${T('Ranking period','Período do ranking')}"><button data-rk="week" aria-pressed="${rankTab==='week'}">${T('This week','Esta semana')}</button><button data-rk="all" aria-pressed="${rankTab==='all'}">${T('Overall','Geral')}</button></div>
+  <ol class="rank">${rows.map(r=>`<li class="rrow${r.id?'':' me'}"><span class="rpos${r.pos<=3&&r.pts?' p'+r.pos:''}">${r.pos}</span><span class="fn"><b>${esc(r.name)}</b><small>${r.games} ${r.games===1?T('game','jogo'):T('games','jogos')} · ${r.cups} ${r.cups===1?T('trophy','troféu'):T('trophies','troféus')}</small></span><span class="rpts">${r.pts}<small>${T('pts','pts')}</small></span></li>`).join('')}</ol>
+  <p class="fnote">${T('Points for games played on their own day: trophy 5, gold 3, silver 2, bronze 1. The week starts on Monday.','Pontos pelos jogos feitos no dia: troféu 5, ouro 3, prata 2, bronze 1. A semana começa na segunda.')}</p>`;
+}
 function friendsScreen(){
  if(!cloudOn)return home();
  REDRAW=friendsScreen;app.classList.remove('wide');
@@ -3558,6 +3577,7 @@ function friendsScreen(){
   ${L.incoming.length?`<div class="sec"><h3>${T('Requests','Pedidos')}</h3>${L.incoming.map(id=>`<div class="freq"><b>${esc(nameOf(id))}</b><button class="btn" data-acc="${id}">${T('Accept','Aceitar')}</button><button class="btn ghost" data-del="${id}">${T('Decline','Recusar')}</button></div>`).join('')}</div>`:''}
   <div class="sec"><h3>${T('Today','Hoje')} · ${T('Matchday','Rodada')} ${n}</h3>${ghead}<div class="fboard">${board}</div>
    ${L.friends.length?`<p class="fnote">${T("A friend's medal shows once you've played that game too. Tap a friend to compare.",'A medalha do amigo aparece quando você também jogou aquele jogo. Toque num amigo para comparar.')}</p>`:`<p class="fnote">${T('Add friends by username to see their results here.','Adicione amigos pelo nome de usuário para ver os resultados deles aqui.')}</p>`}</div>
+  <div class="sec"><h3>${T('Ranking','Ranking')}</h3>${rankHTML([null,...L.friends])}</div>
   ${L.outgoing.length?`<div class="sec"><h3>${T('Sent','Enviados')}</h3>${L.outgoing.map(id=>`<div class="freq"><b>${esc(nameOf(id))}</b><span class="fw">${T('waiting','aguardando')}</span><button class="btn ghost" data-del="${id}">${T('Cancel','Cancelar')}</button></div>`).join('')}</div>`:''}
   <button class="textbtn" id="fref">${T('Refresh','Atualizar')}</button>
   <div class="spacer"></div>${nav('friends')}</section>`;
@@ -3566,6 +3586,7 @@ function friendsScreen(){
  document.querySelectorAll('[data-acc]').forEach(b=>b.onclick=async()=>{abusy(true);after(await acceptRequest(b.dataset.acc))});
  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{abusy(true);after(await removeLink(b.dataset.del))});
  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>friendScreen(b.dataset.f));
+ document.querySelectorAll('[data-rk]').forEach(b=>b.onclick=()=>{rankTab=b.dataset.rk;const y=scrollY;friendsScreen();scrollTo(0,y)});
  $('#fref').onclick=async()=>{abusy(true);amsg(T('Updating…','Atualizando…'));try{await loadSocial();after({ok:T('Up to date.','Tudo atualizado.')})}catch(e){after({err:T("Couldn't update. Check your connection.",'Não deu para atualizar. Confira sua conexão.')})}};
  bindLang(friendsScreen);bindNav();
 }
