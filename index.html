@@ -3591,11 +3591,12 @@ function rankHTML(ids,mode){
   <p class="fnote">${mode==='week'?T('Since Monday. ','Desde segunda. '):''}${T('Played on the day: trophy 5 · gold 3 · silver 2 · bronze 1.','Jogos do dia: troféu 5 · ouro 3 · prata 2 · bronze 1.')}</p>`;
 }
 function perGameHTML(ids){
- const n=todayNum(),people=ids.map(id=>{const res=id?social.res[id]||{}:store.res;return{id,name:id?nameOf(id):profile.username,g:GAME_KEYS.map(g=>rankOf(res,1,n,g)),tot:rankOf(res,1,n)}}).sort((a,b)=>b.tot.pts-a.tot.pts||a.name.localeCompare(b.name));
- const best=GAME_KEYS.map((g,i)=>Math.max(0,...people.map(p=>p.g[i].pts)));
+ const n=todayNum(),avg=x=>x.games?x.pts/x.games:null,fmt=v=>v==null?'–':v.toLocaleString(loc(),{minimumFractionDigits:1,maximumFractionDigits:1});
+ const people=ids.map(id=>{const res=id?social.res[id]||{}:store.res;return{id,name:id?nameOf(id):profile.username,g:GAME_KEYS.map(g=>rankOf(res,1,n,g)),tot:rankOf(res,1,n)}}).sort((a,b)=>(avg(b.tot)??-1)-(avg(a.tot)??-1)||b.tot.games-a.tot.games||a.name.localeCompare(b.name));
+ const best=GAME_KEYS.map((g,i)=>Math.max(0,...people.map(p=>avg(p.g[i])??0)));
  return `<div class="fhead"><span></span>${['MM','TT','C10','VAR'].map(x=>`<span>${x}</span>`).join('')}</div>
-  <div class="fboard">${people.map(p=>`<div class="frow pg${p.id?'':' me'}"><span class="fn"><b>${esc(p.name)}</b><small>${p.tot.pts} pts</small></span>${p.g.map((x,i)=>`<span class="pgc${x.pts&&x.pts===best[i]?' top':''}"><b>${x.games?x.pts:'–'}</b>${x.games?`<small>${x.games}${T('g','j')}</small>`:''}</span>`).join('')}</div>`).join('')}</div>
-  <p class="fnote">${T('Points per game since Rodada 1 (games played on the day). Gold = leader.','Pontos por jogo desde a Rodada 1 (jogos feitos no dia). Dourado = líder.')}</p>`;
+  <div class="fboard">${people.map(p=>`<div class="frow pg${p.id?'':' me'}"><span class="fn"><b>${esc(p.name)}</b><small>${T('avg','média')} ${fmt(avg(p.tot))}</small></span>${p.g.map((x,i)=>{const v=avg(x);return `<span class="pgc${v&&Math.abs(v-best[i])<1e-9?' top':''}"><b>${fmt(v)}</b>${x.games?`<small>${x.games}${T('g','j')}</small>`:''}</span>`}).join('')}</div>`).join('')}</div>
+  <p class="fnote">${T('Average points per game played on its day (trophy 5 · gold 3 · silver 2 · bronze 1). Gold = best.','Média de pontos por jogo feito no dia (troféu 5 · ouro 3 · prata 2 · bronze 1). Dourado = melhor.')}</p>`;
 }
 function friendsScreen(){
  if(!cloudOn)return home();
