@@ -2841,6 +2841,110 @@ reorder(MM,SEED_MM);reorder(TKD,SEED_TT);reorder(C10,SEED_C10);reorder(VAR,SEED_
 reorder(MM,5122);reorder(TKD,6216);reorder(C10,7305);reorder(VAR,8420);
 // Season 5: Rodada 1 stays, everything from Rodada 2 on is reshuffled
 const keep1=(a,s)=>{const x=shuffled(a.slice(1),s);a.splice(1,a.length-1,...x)};keep1(MM,9103);keep1(TKD,9236);keep1(C10,9311);keep1(VAR,9405);
+// ---- Rodadas 31–35: five more puzzles per game (appended, earlier days unchanged) ----
+const MM_31=[
+ {theme:yr("The Golden 2000s","Ouro dos Anos 2000"),q:yr("Who won the Ballon d'Or first?","Quem ganhou a Bola de Ouro primeiro?"),basis:yr("The year each player won the Ballon d'Or, between 2001 and 2008. Cards show his club that year.","O ano em que cada um ganhou a Bola de Ouro, entre 2001 e 2008. A carta mostra o clube daquele ano."),
+  kind:"year",pre:yr("won in","ganhou em"),higher:false,step:5,lo:yr("Earlier","Antes"),hi:yr("Later","Depois"),tag:"club",topics:["ballon","players","europe","d2000"],items:[
+  ["Michael Owen","Liverpool",2001,"lfc","Won it while still at Liverpool.","Ganhou ainda jogando pelo Liverpool."],
+  ["Ronaldo","Real Madrid",2002,"real","Won it after scoring eight goals at a World Cup.","Ganhou depois de fazer oito gols numa Copa do Mundo."],
+  ["Pavel Nedvěd","Juventus",2003,"juve","A Czech midfielder nicknamed 'the Czech Fury'.","Meia tcheco apelidado de 'Fúria Tcheca'."],
+  ["Andriy Shevchenko","Milan",2004,"milan","Later coached Ukraine at Euro 2020.","Depois treinou a Ucrânia na Euro 2020."],
+  ["Ronaldinho","Barcelona",2005,"barca","Was applauded by Real Madrid fans at the Bernabéu that year.","Foi aplaudido pela torcida do Real Madrid no Bernabéu naquele ano."],
+  ["Fabio Cannavaro","Real Madrid",2006,"real","A defender who had just captained Italy to the World Cup.","Zagueiro que tinha acabado de levar a Itália ao título mundial como capitão."],
+  ["Kaká","Milan",2007,"milan","Won it the same year Milan won the Champions League.","Ganhou no ano em que o Milan venceu a Champions."],
+  ["Cristiano Ronaldo","Manchester United",2008,"mufc","Won it at Manchester United, before moving to Real Madrid.","Ganhou no Manchester United, antes de ir para o Real Madrid."]]},
+ {theme:yr("Libertadores Finals","Finais da Libertadores"),q:yr("Which final was played first?","Qual final aconteceu primeiro?"),basis:yr("The year of each Libertadores final. Cards show the champion; the caption shows the beaten finalist.","O ano de cada final da Libertadores. A carta mostra o campeão; a legenda mostra o vice."),
+  kind:"year",pre:yr("won in","venceu em"),higher:false,step:5,lo:yr("Earlier","Antes"),hi:yr("Later","Depois"),tag:"club",topics:["lib","clubs","southam","c_BRA","d2000"],items:[
+  ["Boca Juniors","vs Santos",2003,"boca","Won both legs against Santos.","Venceu os dois jogos contra o Santos."],
+  ["Once Caldas","vs Boca Juniors",2004,"oncecaldas","Beat Boca Juniors on penalties in Manizales.","Venceu o Boca Juniors nos pênaltis em Manizales."],
+  ["São Paulo","vs Atlético Paranaense",2005,"spfc","Won the second leg 4–0 at the Morumbi.","Venceu o jogo de volta por 4 a 0 no Morumbi."],
+  ["Internacional","vs São Paulo",2006,"intl","Fernandão captained the side.","Fernandão era o capitão do time."],
+  ["LDU Quito","vs Fluminense",2008,"ldu","Beat Fluminense on penalties at the Maracanã.","Venceu o Fluminense nos pênaltis no Maracanã."],
+  ["Estudiantes","vs Cruzeiro",2009,"estudiantes","Won the second leg 2–1 at the Mineirão, with Verón as captain.","Venceu o jogo de volta por 2 a 1 no Mineirão, com Verón de capitão."],
+  ["Santos","vs Peñarol",2011,"santos","Neymar scored in the 2–1 second-leg win.","Neymar marcou na vitória por 2 a 1 no jogo de volta."],
+  ["Corinthians","vs Boca Juniors",2012,"timao","Emerson Sheik scored twice in the 2–0 second leg at the Pacaembu, and the club won the title unbeaten.","Emerson Sheik fez os dois gols do 2 a 0 no jogo de volta, no Pacaembu, e o clube foi campeão invicto."]]},
+ {theme:yr("Born in the 90s","Nascidos nos Anos 90"),q:yr("Who was born first?","Quem nasceu primeiro?"),basis:yr("Each player's year of birth.","O ano de nascimento de cada jogador."),
+  kind:"year",pre:yr("born in","nasceu em"),higher:false,step:5,lo:yr("Older","Mais velho"),hi:yr("Younger","Mais novo"),tag:"nation",topics:["players","europe","southam","d2010"],items:[
+  ["Toni Kroos","GER",1990,"GER","Retired after Euro 2024, played on home soil.","Se aposentou após a Euro 2024, disputada em casa."],
+  ["Kevin De Bruyne","BEL",1991,"BEL","Was once sold by Chelsea to Wolfsburg.","Já foi vendido pelo Chelsea ao Wolfsburg."],
+  ["Neymar","BRA",1992,"BRA","Is Brazil's all-time top scorer.","É o maior artilheiro da história da Seleção."],
+  ["Harry Kane","ENG",1993,"ENG","Is England's all-time top scorer.","É o maior artilheiro da história da Inglaterra."],
+  ["Marquinhos","BRA",1994,"BRA","Captained PSG to the 2025 Champions League title.","Foi o capitão do PSG no título da Champions de 2025."],
+  ["Rodri","ESP",1996,"ESP","Won the 2024 Ballon d'Or.","Ganhou a Bola de Ouro de 2024."],
+  ["Lautaro Martínez","ARG",1997,"ARG","Captains Inter.","É o capitão da Inter."],
+  ["Kylian Mbappé","FRA",1998,"FRA","Scored a hat-trick in the 2022 World Cup final.","Fez três gols na final da Copa de 2022."]]},
+ {theme:yr("Club World Cup","Mundial de Clubes"),q:yr("Which club won the Club World Cup first?","Qual clube ganhou o Mundial de Clubes primeiro?"),basis:yr("The year of the FIFA Club World Cup each club won.","O ano do Mundial de Clubes da FIFA que cada clube venceu."),
+  kind:"year",pre:yr("won in","venceu em"),higher:false,step:5,lo:yr("Earlier","Antes"),hi:yr("Later","Depois"),tag:"nation",topics:["clubs","c_BRA","europe","southam","d2000"],items:[
+  ["São Paulo","BRA",2005,"spfc","Beat Liverpool 1–0 with a goal from Mineiro.","Venceu o Liverpool por 1 a 0 com gol de Mineiro."],
+  ["Internacional","BRA",2006,"intl","Adriano Gabiru scored the winner against Barcelona.","Adriano Gabiru fez o gol da vitória contra o Barcelona."],
+  ["Milan","ITA",2007,"milan","Beat Boca Juniors 4–2, with Kaká scoring.","Venceu o Boca Juniors por 4 a 2, com gol de Kaká."],
+  ["Manchester United","ENG",2008,"mufc","Beat LDU Quito 1–0, with Wayne Rooney scoring.","Venceu a LDU por 1 a 0, com gol de Wayne Rooney."],
+  ["Barcelona","ESP",2009,"barca","Lionel Messi scored the winner in extra time against Estudiantes.","Lionel Messi fez o gol da vitória na prorrogação contra o Estudiantes."],
+  ["Inter","ITA",2010,"inter","Beat TP Mazembe of DR Congo in the final.","Venceu o TP Mazembe, do Congo, na final."],
+  ["Corinthians","BRA",2012,"timao","Paolo Guerrero headed the winner against Chelsea.","Paolo Guerrero fez de cabeça o gol da vitória sobre o Chelsea."],
+  ["Bayern Munich","GER",2013,"bayern","Beat Raja Casablanca in Morocco.","Venceu o Raja Casablanca no Marrocos."]]},
+ {theme:yr("Best of the Cup","Craque da Copa"),q:yr("Who was named best player at a World Cup first?","Quem foi eleito o melhor de uma Copa primeiro?"),basis:yr("The World Cup at which each player won the Golden Ball.","A Copa em que cada jogador ganhou a Bola de Ouro do torneio."),
+  kind:"year",pre:yr("Golden Ball in","melhor em"),higher:false,step:10,lo:yr("Earlier","Antes"),hi:yr("Later","Depois"),tag:"nation",topics:["wc","players","europe","southam"],items:[
+  ["Diego Maradona","ARG",1986,"ARG","Captained Argentina to the title.","Foi o capitão da Argentina no título."],
+  ["Salvatore Schillaci","ITA",1990,"ITA","Was also the tournament's top scorer.","Também foi o artilheiro do torneio."],
+  ["Romário","BRA",1994,"BRA","Won the tournament with Brazil.","Foi campeão do torneio com o Brasil."],
+  ["Ronaldo","BRA",1998,"BRA","Played the final hours after a convulsive fit.","Jogou a final horas depois de sofrer uma convulsão."],
+  ["Oliver Kahn","GER",2002,"GER","A goalkeeper who lost the final to Brazil.","Goleiro que perdeu a final para o Brasil."],
+  ["Zinedine Zidane","FRA",2006,"FRA","Was sent off in the final.","Foi expulso na final."],
+  ["Diego Forlán","URU",2010,"URU","Uruguay finished fourth.","O Uruguai terminou em quarto lugar."],
+  ["Luka Modrić","CRO",2018,"CRO","Croatia reached the final for the first time.","A Croácia chegou à final pela primeira vez."]]}
+];
+const TKD_31=[
+ {theme:yr("Azzurri","Azzurra"),topics:["national","players","c_ITA","europe"],rounds:[
+  {clues:[yr("Missed a penalty in a WC final","Perdeu pênalti em final de Copa"),yr("Played for Bologna","Jogou no Bologna"),yr("Played for Juventus","Jogou na Juventus"),yr("Played at a World Cup","Jogou uma Copa do Mundo"),yr("Won the World Cup","Campeão do mundo")],
+   cards:[["Roberto Baggio","ITA",[0,1,2,3]],["Del Piero","ITA",[2,3,4]]]},
+  {clues:[yr("Played at Euro 2000","Jogou a Euro 2000"),yr("Played for Roma","Jogou na Roma"),yr("One-club man","Jogou por um só clube"),yr("Played for Milan","Jogou no Milan"),yr("Retired before 2000","Aposentou antes de 2000")],
+   cards:[["Francesco Totti","ITA",[0,1,2]],["Paolo Maldini","ITA",[0,2,3]],["Franco Baresi","ITA",[2,3,4]]]},
+  {clues:[yr("Played for Juventus","Jogou na Juventus"),yr("Played for Parma","Jogou no Parma"),yr("Won the 2006 World Cup","Campeão do mundo em 2006"),yr("Played for Milan","Jogou no Milan"),yr("Became a club coach","Virou técnico de clube"),yr("Played in Scotland","Jogou na Escócia")],
+   cards:[["Gianluigi Buffon","ITA",[0,1,2]],["Andrea Pirlo","ITA",[0,2,3,4]],["Fabio Cannavaro","ITA",[0,1,2,4]],["Gennaro Gattuso","ITA",[2,3,4,5]]]},
+  {clues:[yr("Top scorer at a World Cup","Artilheiro de uma Copa"),yr("Won the 1982 World Cup","Campeão do mundo em 1982"),yr("Played for Juventus","Jogou na Juventus"),yr("Played abroad","Jogou fora da Itália"),yr("100+ caps for Italy","100+ jogos pela Itália"),yr("Won Euro 2020","Campeão da Euro 2020")],
+   cards:[["Paolo Rossi","ITA",[0,1,2]],["Totò Schillaci","ITA",[0,2,3]],["Dino Zoff","ITA",[1,2,4]],["Giorgio Chiellini","ITA",[2,3,4,5]],["Donnarumma","ITA",[3,5]]]}]},
+ {theme:yr("Brasileirão","Brasileirão"),topics:["clubs","players","c_BRA","southam"],rounds:[
+  {clues:[yr("Won the World Cup","Campeão do mundo"),yr("Played for Barcelona","Jogou no Barcelona"),yr("Played for Vasco","Jogou no Vasco"),yr("Played for Flamengo","Jogou no Flamengo"),yr("Played for Fiorentina","Jogou na Fiorentina")],
+   cards:[["Romário","BRA",[0,1,2,3]],["Edmundo","BRA",[2,3,4]]]},
+  {clues:[yr("From Belo Horizonte","De Belo Horizonte"),yr("Won the Libertadores twice","Bicampeão da Libertadores"),yr("Won the Brasileirão","Campeão brasileiro"),yr("Has been relegated","Já foi rebaixado"),yr("From the Northeast","Do Nordeste")],
+   cards:[["Cruzeiro","cruzeiro",[0,1,2,3]],["Atlético Mineiro","galo",[0,2,3]],["Bahia","bahia",[2,3,4]]]},
+  {clues:[yr("Played at a World Cup","Jogou uma Copa do Mundo"),yr("Played for Flamengo","Jogou no Flamengo"),yr("Won the Brasileirão","Campeão brasileiro"),yr("Played in Portugal","Jogou em Portugal"),yr("Played in Italy","Jogou na Itália"),yr("Played for Santos","Jogou no Santos")],
+   cards:[["Arrascaeta","URU",[0,1,2]],["Hulk","BRA",[0,2,3]],["Pedro","BRA",[0,1,2,4]],["Gabigol","BRA",[1,2,3,4,5]]]},
+  {clues:[yr("From Rio de Janeiro","Do Rio de Janeiro"),yr("World club champion","Campeão mundial"),yr("Won the Libertadores","Campeão da Libertadores"),yr("Has been relegated","Já foi rebaixado"),yr("Won the FIFA Club World Cup","Campeão do Mundial da FIFA"),yr("From São Paulo state","Do estado de São Paulo")],
+   cards:[["Flamengo","fla",[0,1,2]],["Fluminense","flu",[0,2,3]],["Internacional","intl",[1,2,3,4]],["Corinthians","timao",[1,2,3,4,5]],["Santos","santos",[1,2,3,5]]]}]},
+ {theme:yr("El Clásico","El Clásico"),topics:["clubs","players","c_ESP","europe"],rounds:[
+  {clues:[yr("Played for Sporting","Jogou no Sporting"),yr("Portuguese","Português"),yr("Played for Barcelona","Jogou no Barcelona"),yr("Played for Real Madrid","Jogou no Real Madrid"),yr("Won the World Cup","Campeão do mundo")],
+   cards:[["Luís Figo","POR",[0,1,2,3]],["Ronaldo","BRA",[2,3,4]]]},
+  {clues:[yr("Coached in La Liga","Treinou na La Liga"),yr("Played for Juventus","Jogou na Juventus"),yr("Played for Real and Barça","Jogou no Real e no Barça"),yr("Coached Real Madrid or Barça","Treinou Real ou Barça"),yr("Spanish","Espanhol")],
+   cards:[["Michael Laudrup","DEN",[0,1,2]],["Bernd Schuster","GER",[0,2,3]],["Luis Enrique","ESP",[0,2,3,4]]]},
+  {clues:[yr("Played for PSG","Jogou no PSG"),yr("Won the Ballon d'Or","Ganhou a Bola de Ouro"),yr("Played in La Liga","Jogou na La Liga"),yr("Played in Saudi Arabia","Jogou na Arábia Saudita"),yr("Played for Real Madrid","Jogou no Real Madrid"),yr("Played for Juventus","Jogou na Juventus")],
+   cards:[["Lionel Messi","ARG",[0,1,2]],["Neymar","BRA",[0,2,3]],["Karim Benzema","FRA",[1,2,3,4]],["Cristiano Ronaldo","POR",[1,2,3,4,5]]]},
+  {clues:[yr("Played in Asia","Jogou na Ásia"),yr("Played in Italy","Jogou na Itália"),yr("Won the Champions League","Campeão da Champions"),yr("Won the 2010 World Cup","Campeão do mundo em 2010"),yr("Played for PSG","Jogou no PSG"),yr("Played for Real Madrid","Jogou no Real Madrid")],
+   cards:[["Samuel Eto'o","CMR",[0,1,2,5]],["Andrés Iniesta","ESP",[0,2,3]],["Ronaldinho","BRA",[1,2,4]],["Sergio Ramos","ESP",[2,3,4,5]],["Iker Casillas","ESP",[2,3,5]]]}]},
+ {theme:yr("Derbies","Clássicos"),topics:["clubs","history","europe","southam","c_BRA"],rounds:[
+  {clues:[yr("Plays at La Bombonera","Joga na Bombonera"),yr("Won 3 Intercontinental Cups","Tri da Intercontinental"),yr("From Buenos Aires","De Buenos Aires"),yr("Won the Libertadores","Campeão da Libertadores"),yr("Has been relegated","Já foi rebaixado")],
+   cards:[["Boca Juniors","boca",[0,1,2,3]],["River Plate","river",[2,3,4]]]},
+  {clues:[yr("From Milan","De Milão"),yr("Won 7 European Cups","Heptacampeão europeu"),yr("Won the Champions League","Campeão da Champions"),yr("Won the UEFA Cup","Ganhou a Copa da Uefa"),yr("From Turin","De Turim")],
+   cards:[["Milan","milan",[0,1,2]],["Inter","inter",[0,2,3]],["Juventus","juve",[2,3,4]]]},
+  {clues:[yr("From Liverpool","Da cidade de Liverpool"),yr("Won 3+ European Cups","3+ títulos europeus"),yr("Won the English league","Campeão inglês"),yr("Won the Cup Winners' Cup","Ganhou a Recopa Europeia"),yr("From Manchester","De Manchester"),yr("Plays at the Etihad","Joga no Etihad")],
+   cards:[["Liverpool","lfc",[0,1,2]],["Everton","everton",[0,2,3]],["Manchester United","mufc",[1,2,3,4]],["Manchester City","city",[2,3,4,5]]]},
+  {clues:[yr("Won exactly one Libertadores","Uma só Libertadores"),yr("Plays at the Maracanã","Manda jogos no Maracanã"),yr("Won the Libertadores","Campeão da Libertadores"),yr("Has been relegated","Já foi rebaixado"),yr("Won the Intercontinental Cup","Ganhou a Intercontinental"),yr("From Porto Alegre","De Porto Alegre")],
+   cards:[["Fluminense","flu",[0,1,2,3]],["Vasco","vasco",[0,2,3]],["Flamengo","fla",[1,2,4]],["Grêmio","gremio",[2,3,4,5]],["Internacional","intl",[2,3,5]]]}]},
+ {theme:yr("La Roja","La Roja"),topics:["national","players","c_ESP","europe","euro"],rounds:[
+  {clues:[yr("Coached Barcelona","Treinou o Barcelona"),yr("Played in Qatar","Jogou no Catar"),yr("Won the 2010 World Cup","Campeão do mundo em 2010"),yr("Played for Barcelona","Jogou no Barcelona"),yr("Played for Inter Miami","Jogou no Inter Miami")],
+   cards:[["Xavi","ESP",[0,1,2,3]],["Sergio Busquets","ESP",[2,3,4]]]},
+  {clues:[yr("Won the 2010 World Cup","Campeão do mundo em 2010"),yr("Played for Liverpool","Jogou no Liverpool"),yr("Won the Euros","Campeão da Eurocopa"),yr("Played for Atlético Madrid","Jogou no Atlético de Madrid"),yr("Played for Juventus","Jogou na Juventus")],
+   cards:[["Fernando Torres","ESP",[0,1,2,3]],["David Villa","ESP",[0,2,3]],["Álvaro Morata","ESP",[2,3,4]]]},
+  {clues:[yr("Played for one Spanish club only","Só jogou por um clube espanhol"),yr("Played in Qatar","Jogou no Catar"),yr("Played for Spain","Jogou pela Espanha"),yr("Won the 2010 World Cup","Campeão do mundo em 2010"),yr("Played in England","Jogou na Inglaterra"),yr("Played for Man United","Jogou no Manchester United")],
+   cards:[["Raúl","ESP",[0,1,2]],["Carles Puyol","ESP",[0,2,3]],["Fernando Hierro","ESP",[1,2,4]],["Gerard Piqué","ESP",[2,3,4,5]]]},
+  {clues:[yr("Award winner at Euro 2024","Premiado na Euro 2024"),yr("Born in the 2000s","Nasceu nos anos 2000"),yr("Won Euro 2024","Campeão da Euro 2024"),yr("Born in the 1990s","Nasceu nos anos 90"),yr("Played for Barcelona","Jogou no Barcelona"),yr("Played in Germany","Jogou na Alemanha")],
+   cards:[["Lamine Yamal","ESP",[0,1,2,4]],["Rodri","ESP",[0,2,3]],["Pedri","ESP",[1,2,4]],["Dani Olmo","ESP",[0,2,3,4,5]],["Dani Carvajal","ESP",[2,3,5]]]}]}
+];
+const C10_31=["Gabriel Batistuta","Neymar","Paolo Maldini","Erling Haaland","Wayne Rooney"].map(p=>({p}));
+MM.push(...MM_31.map(p=>({...p,stad:false,items:p.items.map(a=>({n:a[0],t:a[1],v:a[2],k:K[a[3]],f:{en:a[4],pt:a[5]}}))})));
+TKD.push(...TKD_31);C10.push(...C10_31);
+
 
 const VAR_MIN=1900,VAR_MAX=2026,VAR_HINTS=['country','decade'];
 const varPlace=d=>`${L(d.st)} | ${L(d.city)} | ${L(CTRY[d.c])}`;
