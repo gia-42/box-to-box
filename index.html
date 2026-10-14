@@ -2944,6 +2944,8 @@ const TKD_31=[
 const C10_31=["Gabriel Batistuta","Neymar","Paolo Maldini","Erling Haaland","Wayne Rooney"].map(p=>({p}));
 MM.push(...MM_31.map(p=>({...p,stad:false,items:p.items.map(a=>({n:a[0],t:a[1],v:a[2],k:K[a[3]],f:{en:a[4],pt:a[5]}}))})));
 TKD.push(...TKD_31);C10.push(...C10_31);
+// Reshuffle from Rodada 5 (14 Oct 2026); Rodadas 1–4 stay as played
+const keep4=(a,s)=>{const x=shuffled(a.slice(4),s);a.splice(4,a.length-4,...x)};keep4(MM,11010);keep4(TKD,12309);keep4(C10,13015);keep4(VAR,14022);
 
 
 const VAR_MIN=1900,VAR_MAX=2026,VAR_HINTS=['country','decade'];
