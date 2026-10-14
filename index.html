@@ -661,6 +661,17 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .rpos.p1{background:var(--gold);color:#1A1206;border-color:transparent}.rpos.p2{background:var(--silver);color:#14171A;border-color:transparent}.rpos.p3{background:var(--bronze);color:#1A0E06;border-color:transparent}
 .rpts{font:900 24px/1 var(--display);font-variant-numeric:tabular-nums;text-align:right}
 .rpts small{font:700 11px var(--ui);color:var(--muted);margin-left:3px;letter-spacing:.04em}
+.fttl{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.fttl .h1{margin:6px 0 8px}
+.fsec{margin-top:12px}
+.fseg{margin-bottom:8px}.fseg button{padding:7px 4px}
+.fsec .frow,.fsec .rrow{padding:5px 10px;border-radius:10px}
+.fsec .fn b{font-size:16px}
+.fsec .fboard,.fsec .rank{gap:5px}
+.fsec .rpos{width:24px;height:24px;font-size:13px}
+.fsec .rpts{font-size:21px}
+.fsec .fnote{margin-top:6px;font-size:12px}
+.screen .amsg:empty{display:none}
 .fnote{font:500 12.5px/1.4 var(--ui);color:var(--muted);margin:8px 0 0}
 .vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:20px 0 6px;text-align:center}
 .vs>div{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:0}
@@ -729,6 +740,12 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .ft-k{display:block;font:700 11px/1.3 var(--ui);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:2px 0 4px}
 .ft-k b{color:var(--fg);font-weight:800}
 #tkact #tprev{flex:0 0 52px;padding:0}
+.vg-zoom{position:absolute;right:12px;top:calc(64px + env(safe-area-inset-top,0px));z-index:3;display:flex;flex-direction:column;gap:6px;transition:opacity .3s}
+.vg-zoom button{width:38px;height:38px;border-radius:10px;border:1px solid rgba(255,255,255,.18);background:rgba(10,14,12,.6);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font:800 22px/1 var(--ui);display:grid;place-items:center;touch-action:manipulation}
+.vg.m-map .vg-zoom,.vg.revealing .vg-zoom{opacity:0;pointer-events:none}
+.vc-photo.pz{touch-action:none;cursor:grab}
+.vc-photo.pz img{position:absolute;left:0;top:0;width:auto;height:auto;max-width:none;object-fit:none;transform-origin:0 0;pointer-events:none}
+.vc-photo.pz .vc-chip,.vc-photo.pz .vc-btm,.vc-photo.pz .credit{pointer-events:none;z-index:1}
 .vg-tip{bottom:calc(84px + env(safe-area-inset-bottom,0px))!important;border-radius:8px!important;border-left:3px solid var(--c5)}
 .vc-photo{border:2px solid var(--c5)!important;border-radius:12px!important}
 .vc-chip{background:rgba(8,12,11,.86)!important;color:#fff!important;border-left:3px solid var(--c5);border-radius:4px!important}
@@ -1826,7 +1843,7 @@ function ttStart(num){
 }
 function tkRound(ri){
  const r=TS.d.rounds[ri],n=r.cards.length;
- Object.assign(TS,{ri,r,lay:TLAY[n],slots:Array(n).fill(null),locked:Array(n).fill(false),deck:shuffled([...Array(n).keys()],TS.num*97+ri*13+5),g:0,h:0,solved:false,wrong:[],hist:[]});
+ Object.assign(TS,{cwMax:0,ri,r,lay:TLAY[n],slots:Array(n).fill(null),locked:Array(n).fill(false),deck:shuffled([...Array(n).keys()],TS.num*97+ri*13+5),g:0,h:0,solved:false,wrong:[],hist:[]});
  if(TS.deck.every((c,i)=>c===i)&&n>1)TS.deck.reverse();
  tkRender();tkIntro(ri);
 }
@@ -1841,8 +1858,9 @@ function tkIntro(ri){
 }
 function tkGeom(){
  const rows=TS.lay.rows,W=Math.min(app.clientWidth-24,400);
- let cw=W/3;const avail=Math.max(280,window.innerHeight-350);
- if(rows*0.98*cw>avail)cw=Math.max(88,avail/(rows*0.98));
+ let cw=W/3;const avail=Math.max(240,window.innerHeight-350);
+ if(rows*0.98*cw>avail)cw=Math.max(72,avail/(rows*0.98));
+ if(TS.cwMax)cw=Math.min(cw,TS.cwMax);
  return {cw,rh:cw*0.98,rows};
 }
 function tkRender(){
@@ -1894,6 +1912,9 @@ function tkRender(){
  }
  if(!document.querySelector('.tk-intro')){tkFitClues();fitAll('.tk-slot .plate',7)}
  fitAll('.tk-deck .plate',10);
+ // if anything still spills below the screen, shrink the board just enough and draw again (once)
+ const over=document.scrollingElement.scrollHeight-window.innerHeight;
+ if(over>1&&!TS.fitting&&document.getElementById('tk')){const {cw,rows}=tkGeom();const next=Math.max(60,cw-over/(rows*0.98)-1);if(next<cw-0.5){TS.cwMax=next;TS.fitting=true;tkRender();TS.fitting=false}}
 }
 function tkResetActions(){
  $('#tkact').innerHTML=`<button class="btn" id="tguess" disabled>${T('Guess','Chutar')}</button><button class="btn hintbtn" id="thint">${T('Hint','Dica')}<span class="cnt" id="thcnt">${TS.hintsLeft}</span></button>`;
@@ -1996,7 +2017,7 @@ function ttResult(num){
  $('#bk').onclick=home;$('#cont').onclick=()=>ttRecap(num,0);
  $('#share').onclick=()=>copyShare(`Box to Box · Tiki-Taka ${num}\n${L(d.theme)}\n${r.rounds.map((x,i)=>`${i+1}. ${'🟥'.repeat(Math.max(x.g-1,0))}${x.g?'🟩':''}${'💡'.repeat(x.h)}`).join('\n')}\n${acc}% ${T('accuracy','de acerto')}`);
 }
-window.addEventListener('resize',()=>{if(document.getElementById('tk')&&TS&&!TS.solved)tkRender()});
+window.addEventListener('resize',()=>{if(document.getElementById('tk')&&TS){TS.cwMax=0;tkRender()}});
 
 /* =================== CAMISA 10 =================== */
 const C10_MAX=10,C10_HINTS=['letter','club','nat'];
@@ -2994,6 +3015,7 @@ class WMap{
  get sMin(){return Math.min(this.W/1000,this.H/this.hR)}
  measure(keep){this.W=Math.max(1,this.el.clientWidth);this.H=Math.max(1,this.el.clientHeight);if(!keep&&!this.s)this.home()}
  home(){
+  if(this.o.answer&&this.o.zoomAns){const v=this.focusView(this.o.answer,this.o.fitPad);return this.centerOn(v.cx,v.cy,v.s)}
   if(this.o.answer&&this.pin)return this.fit([this.pin,this.o.answer],this.o.fitPad);
   if(this.pin)return this.centerOn(wmX(this.pin[1]),wmY(this.pin[0]),Math.max(this.sMin,this.W/120));
   // Atlantic-centred opening view: the Americas, Europe and Africa all visible
@@ -3006,6 +3028,8 @@ class WMap{
   return {cx:(x0+x1)/2+(pad.r-pad.l)/2/s,cy:(y0+y1)/2+(pad.b-pad.t)/2/s,s};
  }
  fit(pts,pad){const v=this.fitView(pts,pad);this.centerOn(v.cx,v.cy,v.s)}
+ // close-up on one point (about 500 km across), centred in the area the padding leaves free
+ focusView(pt,pad){pad=Object.assign({t:60,b:40,l:44,r:44},pad||{});const s=Math.max(this.sMin,Math.min(60,(this.W-pad.l-pad.r)/12));return{cx:wmX(pt[1])+(pad.r-pad.l)/2/s,cy:wmY(pt[0])+(pad.b-pad.t)/2/s,s}}
  // smooth camera move: zoom on a log scale, ease in-out
  flyTo(v,dur,cb){
   const c0=[this.x0+this.W/this.s/2,this.y0+this.H/this.s/2],s0=this.s,t0=performance.now();
@@ -3143,6 +3167,7 @@ function varPlay(){
   <div class="vg-layer vg-map" id="vgm"></div>
   <div class="vg-top"><button class="vg-fab" id="bk" aria-label="${T('Back','Voltar')}">${ICON.back}</button><div class="vg-hints" id="vhints"></div><button class="vg-fab" id="inf" aria-label="${T('How to play','Como jogar')}">${ICON.info}</button></div>
   <div class="vg-pill vg-center" id="vgc"></div>
+  <div class="vg-zoom" id="vzoom"><button type="button" data-vz="1" aria-label="${T('Zoom in','Aproximar')}">+</button><button type="button" data-vz="-1" aria-label="${T('Zoom out','Afastar')}">−</button></div>
   <div class="vg-ctrl" id="vgctrl">
    <button class="vg-hide" id="vhide" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg><span>${T('Hide','Ocultar')}</span></button>
    <div class="vg-console">
@@ -3160,6 +3185,7 @@ function varPlay(){
   <div class="vg-card" id="vcard"></div>
  </section>`,true);
  const pp=new PhotoPan($('#vgp'),$('#vgp img'));
+ document.querySelectorAll('[data-vz]').forEach(b=>b.onclick=()=>{const el=$('#vgp');pp.zoomAt([el.clientWidth/2,el.clientHeight*.42],+b.dataset.vz>0?1.8:1/1.8,true);pp.onTouch&&pp.onTouch()});
  $('#vhide').onclick=()=>{const c=$('#vgctrl'),m=c.classList.toggle('min');$('#vhide').setAttribute('aria-expanded',!m);$('#vhide span').textContent=m?T('Show','Mostrar'):T('Hide','Ocultar')};
  const big=new WMap($('#vgm'),{pick:true,interactive:true,pin:VS.pin,onPin:p=>{VS.pin=p;varSync()},onMove:()=>{VS.moved=true;$('#vgc').classList.remove('show')}});
  const mini=new WMap($('#vthm'),{nolabels:true,pin:VS.pin});
@@ -3223,7 +3249,8 @@ function varReveal(num){
  if(VS.mode!=='map')varMode('map');
  vg.classList.add('revealing');m.o.pick=false;m.o.answer=[d.lat,d.lon];m.o.tag=fmtKm(r.km);m.anim={line:0,ans:0};
  varCard(num);const ch=$('#vcard').offsetHeight,pad={t:76,b:ch+28,l:46,r:46};m.o.fitPad=pad;
- m.flyTo(m.fitView([r.pin,[d.lat,d.lon]],pad),1300,()=>m.tween('line',650,()=>m.tween('ans',520,()=>{m.render();$('#vcard').classList.add('show')})));
+ const ans=[d.lat,d.lon];
+ m.flyTo(m.fitView([r.pin,ans],pad),1100,()=>m.tween('line',600,()=>m.tween('ans',480,()=>{m.o.zoomAns=true;m.flyTo(m.focusView(ans,pad),1300,()=>{m.render();$('#vcard').classList.add('show')})})));
 }
 function varYearsTxt(r){return r.yd===0?null:r.yd===1?T('1 year off','1 ano de erro'):T(`${r.yd} years off`,`${r.yd} anos de erro`)}
 function varSummary(r){
@@ -3238,6 +3265,7 @@ function varCard(num){
  const d=varDay(num),r=R('var',num),pen=varPen(r),c=$('#vcard');if(!c)return;
  c.innerHTML=`${varPhotoCard(d)}<h2>${tier(pen).w}</h2><p>${varSummary(r)}</p><button class="btn" id="vcont">${T('Continue','Continuar')}</button>`;
  $('#vcont').onclick=()=>varMedal(num);
+ const ph=c.querySelector('.vc-photo');if(ph){ph.classList.add('pz');new PhotoPan(ph,ph.querySelector('img'))}
 }
 
 /* ---------- medal ---------- */
@@ -3546,16 +3574,15 @@ function usernameScreen(first){
 
 // ---- friends screens ----
 // ---- Friends ranking: points for games played on their own day (trophy 5 · gold 3 · silver 2 · bronze 1)
-let rankTab='week';
+let fTab='today';
 const tierPts=pen=>{const t=tier(pen);return t.k==='cup'?5:t.k==='medal'?[0,3,2,1][t.n]:0};
 function rankOf(res,from,to){let pts=0,games=0,cups=0;Object.keys(res).forEach(k=>{const m=/^(mm|tt|c10|var)(\d+)$/.exec(k);if(!m)return;const n=+m[2],r=res[k];if(n<from||n>to||!r||!r.onDay)return;const pen=resPen(m[1],r);pts+=tierPts(pen);games++;if(pen===0)cups++});return{pts,games,cups}}
-function rankHTML(ids){
- const n=todayNum(),from=rankTab==='week'?Math.max(1,n-(new Date().getDay()+6)%7):1;
+function rankHTML(ids,mode){
+ const n=todayNum(),from=mode==='week'?Math.max(1,n-(new Date().getDay()+6)%7):1;
  const rows=ids.map(id=>({id,name:id?nameOf(id):profile.username,...rankOf(id?social.res[id]||{}:store.res,from,n)})).sort((a,b)=>b.pts-a.pts||b.cups-a.cups||a.name.localeCompare(b.name));
  let pos=0;rows.forEach((r,i)=>{if(!i||r.pts!==rows[i-1].pts||r.cups!==rows[i-1].cups)pos=i+1;r.pos=pos});
- return `<div class="seg" role="group" aria-label="${T('Ranking period','Período do ranking')}"><button data-rk="week" aria-pressed="${rankTab==='week'}">${T('This week','Esta semana')}</button><button data-rk="all" aria-pressed="${rankTab==='all'}">${T('Overall','Geral')}</button></div>
-  <ol class="rank">${rows.map(r=>`<li class="rrow${r.id?'':' me'}"><span class="rpos${r.pos<=3&&r.pts?' p'+r.pos:''}">${r.pos}</span><span class="fn"><b>${esc(r.name)}</b><small>${r.games} ${r.games===1?T('game','jogo'):T('games','jogos')} · ${r.cups} ${r.cups===1?T('trophy','troféu'):T('trophies','troféus')}</small></span><span class="rpts">${r.pts}<small>${T('pts','pts')}</small></span></li>`).join('')}</ol>
-  <p class="fnote">${T('Points for games played on their own day: trophy 5, gold 3, silver 2, bronze 1. The week starts on Monday.','Pontos pelos jogos feitos no dia: troféu 5, ouro 3, prata 2, bronze 1. A semana começa na segunda.')}</p>`;
+ return `<ol class="rank">${rows.map(r=>`<li class="rrow${r.id?'':' me'}"><span class="rpos${r.pos<=3&&r.pts?' p'+r.pos:''}">${r.pos}</span><span class="fn"><b>${esc(r.name)}</b><small>${r.games} ${r.games===1?T('game','jogo'):T('games','jogos')} · ${r.cups} ${r.cups===1?T('trophy','troféu'):T('trophies','troféus')}</small></span><span class="rpts">${r.pts}<small>pts</small></span></li>`).join('')}</ol>
+  <p class="fnote">${mode==='week'?T('Since Monday. ','Desde segunda. '):''}${T('Played on the day: trophy 5 · gold 3 · silver 2 · bronze 1.','Jogos do dia: troféu 5 · ouro 3 · prata 2 · bronze 1.')}</p>`;
 }
 function friendsScreen(){
  if(!cloudOn)return home();
@@ -3571,22 +3598,20 @@ function friendsScreen(){
  const board=[null,...L.friends].map(id=>`<button class="frow${id?'':' me'}" ${id?`data-f="${id}"`:'disabled'}><span class="fn"><b>${esc(id?nameOf(id):profile.username)}</b><small>${ICON.flame}${id?streakOf(social.res[id]||{}):streak()}</small></span>${GAME_KEYS.map(g=>cell(id,g)).join('')}</button>`).join('');
  const ghead=`<div class="fhead"><span></span>${['MM','TT','C10','VAR'].map(x=>`<span>${x}</span>`).join('')}</div>`;
  app.innerHTML=`<section class="screen">${bar}
-  <h1 class="h1">${T('Friends','Amigos')}</h1>
+  <div class="fttl"><h1 class="h1">${T('Friends','Amigos')}</h1><button class="iconbtn" id="fref" aria-label="${T('Refresh','Atualizar')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button></div>
   <form id="fform" class="fadd" novalidate><label class="sr" for="fname">${T("Friend's username",'Nome do amigo')}</label><input id="fname" class="ain" placeholder="${T("Friend's username",'Nome de usuário do amigo')}" autocapitalize="off" spellcheck="false" maxlength="16"><button class="btn" type="submit">${T('Add','Adicionar')}</button></form>
   <p class="amsg" id="amsg" role="status"></p>
   ${L.incoming.length?`<div class="sec"><h3>${T('Requests','Pedidos')}</h3>${L.incoming.map(id=>`<div class="freq"><b>${esc(nameOf(id))}</b><button class="btn" data-acc="${id}">${T('Accept','Aceitar')}</button><button class="btn ghost" data-del="${id}">${T('Decline','Recusar')}</button></div>`).join('')}</div>`:''}
-  <div class="sec"><h3>${T('Today','Hoje')} · ${T('Matchday','Rodada')} ${n}</h3>${ghead}<div class="fboard">${board}</div>
-   ${L.friends.length?`<p class="fnote">${T("A friend's medal shows once you've played that game too. Tap a friend to compare.",'A medalha do amigo aparece quando você também jogou aquele jogo. Toque num amigo para comparar.')}</p>`:`<p class="fnote">${T('Add friends by username to see their results here.','Adicione amigos pelo nome de usuário para ver os resultados deles aqui.')}</p>`}</div>
-  <div class="sec"><h3>${T('Ranking','Ranking')}</h3>${rankHTML([null,...L.friends])}</div>
+  <div class="sec fsec"><div class="seg seg3 fseg" role="group" aria-label="${T('Results','Resultados')}"><button data-ft="today" aria-pressed="${fTab==='today'}">${T('Today','Hoje')}</button><button data-ft="week" aria-pressed="${fTab==='week'}">${T('Week','Semana')}</button><button data-ft="all" aria-pressed="${fTab==='all'}">${T('Overall','Geral')}</button></div>
+   ${fTab==='today'?`${ghead}<div class="fboard">${board}</div><p class="fnote">${L.friends.length?T(`Matchday ${n}. A friend's medal shows once you've played that game. Tap to compare.`,`Rodada ${n}. A medalha do amigo aparece quando você joga aquele jogo. Toque para comparar.`):T('Add friends by username to see their results here.','Adicione amigos pelo nome de usuário para ver os resultados deles aqui.')}</p>`:rankHTML([null,...L.friends],fTab)}</div>
   ${L.outgoing.length?`<div class="sec"><h3>${T('Sent','Enviados')}</h3>${L.outgoing.map(id=>`<div class="freq"><b>${esc(nameOf(id))}</b><span class="fw">${T('waiting','aguardando')}</span><button class="btn ghost" data-del="${id}">${T('Cancel','Cancelar')}</button></div>`).join('')}</div>`:''}
-  <button class="textbtn" id="fref">${T('Refresh','Atualizar')}</button>
   <div class="spacer"></div>${nav('friends')}</section>`;
  const after=r=>{friendsScreen();if(r)amsg(r.err||r.ok,!!r.err)};
  $('#fform').onsubmit=async e=>{e.preventDefault();const v=$('#fname').value;if(!v.trim())return;abusy(true);amsg(T('Searching…','Buscando…'));after(await sendRequest(v))};
  document.querySelectorAll('[data-acc]').forEach(b=>b.onclick=async()=>{abusy(true);after(await acceptRequest(b.dataset.acc))});
  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{abusy(true);after(await removeLink(b.dataset.del))});
  document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>friendScreen(b.dataset.f));
- document.querySelectorAll('[data-rk]').forEach(b=>b.onclick=()=>{rankTab=b.dataset.rk;const y=scrollY;friendsScreen();scrollTo(0,y)});
+ document.querySelectorAll('[data-ft]').forEach(b=>b.onclick=()=>{fTab=b.dataset.ft;friendsScreen()});
  $('#fref').onclick=async()=>{abusy(true);amsg(T('Updating…','Atualizando…'));try{await loadSocial();after({ok:T('Up to date.','Tudo atualizado.')})}catch(e){after({err:T("Couldn't update. Check your connection.",'Não deu para atualizar. Confira sua conexão.')})}};
  bindLang(friendsScreen);bindNav();
 }
