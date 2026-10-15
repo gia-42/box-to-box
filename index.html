@@ -613,6 +613,9 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .ndot{position:absolute;top:-1px;right:-1px;width:10px;height:10px;border-radius:50%;background:var(--bad);border:2px solid var(--bg)}
 .nav button{position:relative}
 .nav .ndot{top:4px;right:16px}
+.nbadge{position:absolute;top:-6px;right:-7px;min-width:18px;height:18px;padding:0 4px;border-radius:999px;background:var(--bad);color:#fff;font:800 11px/18px var(--ui);font-style:normal;text-align:center;border:2px solid var(--bg);box-sizing:content-box;animation:nbIn .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes nbIn{from{transform:scale(0)}to{transform:scale(1)}}
+.nav button{position:relative}.nav .nbadge{top:0;left:calc(50% + 9px);right:auto}
 .acc .h1{margin-top:18px}
 .acol{display:flex;flex-direction:column;gap:10px;margin-top:6px}
 .acol .btn{flex:none;width:100%}
@@ -1632,8 +1635,8 @@ function home(){REDRAW=home;app.classList.remove('wide');
 }
 const ICON_STATS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 20V11M12 20V5M19 20v-6"/></svg>';
 function nav(cur){const b=(k,ic,lb)=>`<button data-go="${k}" ${cur===k?'aria-current="page"':''}>${ic}${lb}</button>`;
- return `<nav class="nav">${b('today',ICON.today,T('Today','Hoje'))}${b('archive',ICON.archive,T('Archive','Arquivo'))}${b('stats',ICON_STATS,T('Stats','Números'))}${cloudOn?b('friends',ICON_FRIENDS+(incomingCount()?'<i class="ndot"></i>':''),T('Friends','Amigos')):''}</nav>`}
-function bindNav(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>({today:home,archive,stats,friends:friendsScreen})[b.dataset.go]());document.querySelectorAll('[data-acct]').forEach(b=>b.onclick=accountScreen)}
+ return `<nav class="nav">${b('today',ICON.today,T('Today','Hoje'))}${b('archive',ICON.archive,T('Archive','Arquivo'))}${b('stats',ICON_STATS,T('Stats','Números'))}${cloudOn?b('friends',ICON_FRIENDS+(incomingCount()?`<i class="nbadge">${incomingCount()>9?'9+':incomingCount()}</i>`:''),T('Friends','Amigos')):''}</nav>`}
+function bindNav(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>({today:home,archive,stats,friends:friendsScreen})[b.dataset.go]());document.querySelectorAll('[data-acct]').forEach(b=>b.onclick=()=>incomingCount()?friendsScreen():accountScreen())}
 
 /* =================== ARCHIVE =================== */
 let archTab='mm';
@@ -3434,6 +3437,20 @@ async function loadSocial(){
  }
  social={loaded:true,links,names,res};
 }
+// Friend-request badge: refresh quietly without redrawing the screen (so a game in progress isn't disturbed)
+function paintBadges(){
+ const n=incomingCount(),txt=n>9?'9+':String(n);
+ document.querySelectorAll('[data-acct],[data-go="friends"]').forEach(b=>{let i=b.querySelector('.nbadge');if(!n){i&&i.remove();return}if(!i){i=document.createElement('i');i.className='nbadge';b.appendChild(i)}i.textContent=txt});
+}
+let reqBusy=false;
+async function checkRequests(){
+ if(!sb||!session||reqBusy||document.hidden)return;reqBusy=true;
+ try{const before=incomingCount();await loadSocial();if(incomingCount()!==before){if(REDRAW===friendsScreen&&document.getElementById('fform')&&!document.activeElement?.matches('input'))friendsScreen();else paintBadges()}}catch(e){}
+ reqBusy=false;
+}
+setInterval(checkRequests,60000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkRequests()});
+window.addEventListener('focus',checkRequests);
 function socialLists(){
  const m=myId(),L=social.links,other=l=>l.requester===m?l.addressee:l.requester,byName=(a,b)=>(social.names[a]||'').localeCompare(social.names[b]||'');
  return{friends:L.filter(l=>l.status==='accepted').map(other).sort(byName),incoming:L.filter(l=>l.status==='pending'&&l.addressee===m).map(l=>l.requester).sort(byName),outgoing:L.filter(l=>l.status==='pending'&&l.requester===m).map(l=>l.addressee).sort(byName)};
@@ -3484,7 +3501,7 @@ const ICON_USER='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 function acctBtn(){
  if(!cloudOn)return'';
  const n=incomingCount(),lbl=session?(profile?profile.username:T('Account','Conta')):T('Log in','Entrar');
- return `<button class="acctbtn${session?' on':''}" data-acct aria-label="${esc(lbl)}${n?`, ${n} ${T('friend requests','pedidos de amizade')}`:''}">${ICON_USER}${n?'<i class="ndot"></i>':''}</button>`;
+ return `<button class="acctbtn${session?' on':''}" data-acct aria-label="${esc(lbl)}${n?`, ${n} ${T('friend requests','pedidos de amizade')}`:''}">${ICON_USER}${n?`<i class="nbadge">${n>9?'9+':n}</i>`:''}</button>`;
 }
 function acctCard(){
  if(!cloudOn)return'';
