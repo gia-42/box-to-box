@@ -743,6 +743,9 @@ button.wm-thumb img{width:100%;height:100%;object-fit:cover;display:block}
 .vg-hide{position:absolute;top:8px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:4px;height:26px;padding:0 11px 0 8px;border-radius:999px;border:1px solid #2C3B36;background:rgba(12,18,16,.85);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:var(--fg);font:700 11px var(--ui);letter-spacing:.08em;text-transform:uppercase;max-width:none!important;margin:0!important}
 .vg-hide svg{width:15px;height:15px;transition:transform .3s}
 .vg-ctrl.min{transform:translateY(calc(100% - 42px));background:none!important}
+.vg-frame,.vg-pill{transition:opacity .3s}
+.vg.uihid .vg-frame,.vg.uihid .vg-pill{opacity:0!important;pointer-events:none}
+.vg-ctrl .vg-hide{transition:none}
 .vg-ctrl.min .vg-hide svg{transform:rotate(180deg)}
 .vg-ctrl.min .vg-console{opacity:0;pointer-events:none}
 .vg-console{transition:opacity .3s}
@@ -1447,13 +1450,15 @@ const mmP=num=>MM[num-1]||null;
 function dateOf(num){const d=new Date(LAUNCH);d.setDate(d.getDate()+num-1);return d}
 const fmtDate=d=>d.toLocaleDateString(loc(),{day:'2-digit',month:'short',year:'numeric'});
 const KEY='b2b-v4'; // season 4: everyone starts again from Rodada 1 (10 Oct 2026)
-const SEASON=5;
+const SEASON=6;
 // Season 5 = reshuffle from Rodada 2 (11 Oct 2026). Rodada 1 results from season 4 stay valid.
-const okRow=r=>r.data&&(r.data.s===SEASON||(r.data.s===4&&r.day<2));
+const okRow=r=>r.data&&(r.data.s===SEASON||(r.data.s===5&&r.day<8)||(r.data.s===4&&r.day<2));
 let store={res:{},know:{}};
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.res){store=s;store.know=store.know||{}}}catch(e){}
 // Puzzles from Rodada 2 on were reshuffled: drop any result saved for them before the change
-if(store.mig!==5){Object.keys(store.res).forEach(k=>{const m=/^(mm|tt|c10|var)(\d+)$/.exec(k);if(m&&+m[2]>=2)delete store.res[k]});store.mig=5;try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
+if(store.mig!==5){Object.keys(store.res).forEach(k=>{const m=/^(mm|tt|c10|var)(\d+)$/.exec(k);if(m&&+m[2]>=2)delete store.res[k]});store.mig=5;}
+// Season 6: today's puzzles (Rodada 8) changed, so results saved for Rodada 8 or later are cleared; Rodadas 1–7 stay
+if(store.mig!==6){Object.keys(store.res).forEach(k=>{const m=/^(mm|tt|c10|var)(\d+)$/.exec(k);if(m&&+m[2]>=8)delete store.res[k]});store.mig=6;try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}}
 {const MIG={br:'c_BRA',england:'c_ENG',italy:'c_ITA',spain:'c_ESP',germany:'c_GER',france:'c_FRA',s70:'d1970'};Object.keys(store.know).forEach(k=>{if(MIG[k]){store.know[MIG[k]]=(store.know[MIG[k]]||0)+store.know[k];delete store.know[k]}})}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(store))}catch(e){}try{cloudPush()}catch(e){}}
 const R=(g,n)=>store.res[g+n];
@@ -2983,6 +2988,11 @@ MM.push(...MM_31.map(p=>({...p,stad:false,items:p.items.map(a=>({n:a[0],t:a[1],v
 TKD.push(...TKD_31);C10.push(...C10_31);
 // Reshuffle from Rodada 5 (14 Oct 2026); Rodadas 1–4 stay as played
 const keep4=(a,s)=>{const x=shuffled(a.slice(4),s);a.splice(4,a.length-4,...x)};keep4(MM,11010);keep4(TKD,12309);keep4(C10,13015);keep4(VAR,14022);
+// Season 6 (17 Oct 2026): Rodadas 1–7 stay exactly as played. From Rodada 8 on, every puzzle nobody has seen yet comes first
+// (checked against every version of the game that went live), with no similar themes on consecutive days.
+const ORDER8={"mm": ["Euro Hosts", "World Champions", "Old Grounds", "Born in the 90s", "Scudetto", "Full House", "Champions League Finals", "Lifting the Cup", "English Champions", "Top of the Cup", "The Golden 2000s", "Libertadores Finals", "Winning Managers", "Club World Cup", "Brazilian Roots", "Centurions", "Best of the Cup", "Birthdays", "Kings of Europe", "Kings of Africa", "Kings of America", "Club Legends", "Debutants", "Founding Fathers", "Golden Boots", "Big Signings", "Opening Day", "Host Nations"], "tt": ["World Cup 2002", "Goalkeepers", "World Club Champions", "El Clásico", "Derbies", "La Roja", "Tri and Tetra", "Azzurri", "Premier League", "Brasileirão", "Uruguay & Colombia", "Rio de Janeiro", "Giants", "South America", "Managers", "Libertadores", "England & France", "São Paulo Football", "Ballon d'Or", "Bundesliga", "Strikers", "The Seleção", "Stadiums", "Brazilians in Europe", "African Stars", "Germany & Holland", "The Euros", "National Teams"], "c10": ["Zinedine Zidane", "Steven Gerrard", "Ronaldo", "Kylian Mbappé", "Carlos Tevez", "Paolo Maldini", "Diego Forlán", "Lionel Messi", "Vinícius Júnior", "Luka Modrić", "Neymar", "Gabriel Batistuta", "Luis Suárez", "Gianluigi Buffon", "David Beckham", "Zico", "Robert Lewandowski", "Cristiano Ronaldo", "Erling Haaland", "Johan Cruyff", "Kaká", "Diego Maradona", "Wayne Rooney", "Ronaldinho", "Andrea Pirlo", "Juan Román Riquelme", "Thierry Henry", "Kevin De Bruyne"], "var": ["Chelsea's world title", "The Greek miracle", "Zidane's last act", "Corinthians in Japan", "The Sarrià Tragedy", "God in shorts", "The impossible free kick", "Agüerooo!", "The 7–1", "The first star", "Santos 4–5 Flamengo", "The Paris final", "Hurst's hat-trick", "The Flying Dutchman", "The first final", "Africa's World Cup", "Dia 15 Vote", "Gabigol's two minutes", "The bicycle kick", "The Corinthians Invasion", "Messi's first goal", "The Battle of the Aflitos", "Three-time champions", "Messi's World Cup", "The 5000–1 champions", "The fourth star", "The Hand of God", "The Maracanazo"]};
+function fromDay8(a,ids,idf){const by=new Map(a.slice(7).map(x=>[idf(x),x])),tail=ids.map(i=>by.get(i));if(tail.length!==a.length-7||tail.some(x=>!x))return;a.splice(7,a.length-7,...tail)}
+fromDay8(MM,ORDER8.mm,p=>p.theme.en);fromDay8(TKD,ORDER8.tt,p=>p.theme.en);fromDay8(C10,ORDER8.c10,c=>c.p);fromDay8(VAR,ORDER8.var,v=>v.title.en);
 
 
 const VAR_MIN=1900,VAR_MAX=2026,VAR_HINTS=['country','decade'];
@@ -3070,7 +3080,9 @@ class WMap{
    else if(P.size===2){const after=[...P.values()],mid=a=>[(a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2],dist=a=>Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])||1;
     const m0=mid(before),m1=mid(after);this.panBy(m1[0]-m0[0],m1[1]-m0[1]);this.zoomAt(m1,dist(after)/dist(before));moved=99;this.o.onMove&&this.o.onMove()}});
   const up=e=>{if(!P.has(e.pointerId))return;const p=loc(e);P.delete(e.pointerId);
-   if(P.size===0&&!multi&&moved<=6&&Date.now()-t0<700&&this.o.pick){const lat=wmLat(this.y0+p[1]/this.s),lon=wmLon(this.x0+p[0]/this.s);this.pin=[+lat.toFixed(4),+lon.toFixed(4)];this.draw();this.o.onPin&&this.o.onPin(this.pin)}};
+   if(P.size===0&&!multi&&moved<=6&&Date.now()-t0<700&&this.o.pick){let mx=this.x0+p[0]/this.s,my=this.y0+p[1]/this.s;const R=e.pointerType==='mouse'?10:22;let best=null;if(this.W/this.s<=120)for(const d of this.dots||[]){const dd=Math.hypot(d[0]-p[0],d[1]-p[1]);if(dd<=R&&(!best||dd<best[0]))best=[dd,d]}if(best){mx=best[1][2];my=best[1][3]}const lat=wmLat(my),lon=wmLon(mx);this.pin=[+lat.toFixed(4),+lon.toFixed(4)];this.draw();this.o.onPin&&this.o.onPin(this.pin);
+    // dropped while zoomed far out: fly in around the pin so the player sees exactly where it landed and can tap again to adjust
+    if(this.W/this.s>70){const ns=Math.min(60,this.s*4);this.flyTo({cx:mx+(this.W/2-p[0])/ns*0,cy:my,s:ns},600)}}};
   el.addEventListener('pointerup',up);el.addEventListener('pointercancel',e=>{P.delete(e.pointerId);multi=true});
   el.addEventListener('wheel',e=>{e.preventDefault();this.zoomAt(loc(e),Math.exp(-Math.max(-60,Math.min(60,e.deltaY))*.006));this.o.onMove&&this.o.onMove()},{passive:false});
   el.addEventListener('dblclick',e=>{e.preventDefault();this.zoomAt(loc(e),2,true);this.o.onMove&&this.o.onMove()});
@@ -3083,12 +3095,13 @@ class WMap{
   let pins='',line='',labels='';
   const A=Object.assign({line:1,ans:1},this.anim||{}),ease=k=>1-(1-k)**3,back=k=>k<=0?0:1+2.7*Math.pow(k-1,3)+1.7*Math.pow(k-1,2);let tag='';
   const pinSVG=(p,cls,k=1)=>{const [x,y]=this.toScreen(p[0],p[1]);boxes.push([x-11,y-28,22,30]);return `<g class="pin ${cls}" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${k.toFixed(3)})"><ellipse cx="0" cy="0" rx="5" ry="2" class="sh"/><path d="${PIN_PATH}"/>${cls==='ans'?'<path d="M-4 -17.5l2.8 2.8 5-5.2" class="ck"/>':'<circle cx="0" cy="-17" r="3.6"/>'}</g>`};
-  if(this.o.answer){const a=this.o.answer,[ax,ay]=this.toScreen(a[0],a[1]),rk=50/(6371*Math.cos(a[0]*Math.PI/180))*1000/(2*Math.PI)*s*ease(A.ans);
+  if(this.o.answer){const a=this.o.answer,[ax,ay]=this.toScreen(a[0],a[1]),rk=100/(6371*Math.cos(a[0]*Math.PI/180))*1000/(2*Math.PI)*s*ease(A.ans);
    if(rk>4)line+=`<circle cx="${ax}" cy="${ay}" r="${rk}" class="ring"/>`;
    if(this.pin&&A.line>0){const [gx,gy]=this.toScreen(this.pin[0],this.pin[1]),e=ease(A.line);line+=`<line x1="${gx}" y1="${gy}" x2="${gx+(ax-gx)*e}" y2="${gy+(ay-gy)*e}" class="dash"/>`;
     if(A.line>=1&&this.o.tag&&Math.hypot(ax-gx,ay-gy)>70){const w=txtW(this.o.tag,'700 12px Barlow')+16;tag=`<g class="dtag" transform="translate(${((gx+ax)/2).toFixed(1)} ${((gy+ay)/2).toFixed(1)})"><rect x="${-w/2}" y="-12" width="${w}" height="24" rx="7"/><text y="4.5" text-anchor="middle">${this.o.tag}</text></g>`}}}
   if(this.pin)pins+=pinSVG(this.pin,'guess');
   if(this.o.answer&&A.ans>0)pins+=pinSVG(this.o.answer,'ans',back(A.ans));
+  this.dots=[];
   if(this.o.nolabels){this.ov.innerHTML=line+pins;return}
   // labels: big cities and country names compete for space; anything that would overlap is skipped
   const pt=LANG==='pt',maxRank=s<.5?2:s<.9?3:s<1.6?4:s<3?5:s<8?6:0,maxTier=s<.9?0:s<1.8?1:s<3.6?2:s<7?3:s<13?4:5;let shown=0;
@@ -3096,7 +3109,7 @@ class WMap{
    const n=(pt?c[1]:c[0]).toUpperCase(),w=txtW(n,'700 9.5px Barlow')+n.length*1.1;if(c[5]*s<w*.8)continue;if(fits(x-w/2,y-6,w,12))labels+=`<text x="${x}" y="${y+3.5}" class="cl" text-anchor="middle">${n}</text>`}};
   const cities=(lo,hi)=>{for(const c of WMAP.city){if(c[3]<lo||c[3]>hi||shown>70)continue;const x=(c[1]-this.x0)*s,y=(c[2]-this.y0)*s;if(x<0||x>W||y<0||y>H)continue;
    const w=txtW(c[0],'600 11px Barlow')+2;let lx=x+5;if(!fits(x-3,y-3,6,6))continue;if(!fits(lx,y-7,w,14)){lx=x-5-w;if(!fits(lx,y-7,w,14)){boxes.pop();continue}}
-   labels+=`<circle cx="${x}" cy="${y}" r="2.4" class="cd"/><text x="${lx}" y="${y+4}" class="cn">${c[0]}</text>`;shown++}};
+   labels+=`<circle cx="${x}" cy="${y}" r="2.4" class="cd"/><text x="${lx}" y="${y+4}" class="cn">${c[0]}</text>`;this.dots.push([x,y,c[1],c[2]]);shown++}};
   if(s>=1.6){cities(1,Math.min(2,maxTier));countries();cities(3,maxTier)}else{countries();cities(1,maxTier)}
   this.ov.innerHTML=labels+line+pins+tag;
  }
@@ -3195,7 +3208,7 @@ function varPlay(){
  </section>`,true);
  const pp=new PhotoPan($('#vgp'),$('#vgp img'));
  document.querySelectorAll('[data-vz]').forEach(b=>b.onclick=()=>{const el=$('#vgp');pp.zoomAt([el.clientWidth/2,el.clientHeight*.42],+b.dataset.vz>0?1.8:1/1.8,true);pp.onTouch&&pp.onTouch()});
- $('#vhide').onclick=()=>{const c=$('#vgctrl'),m=c.classList.toggle('min');$('#vhide').setAttribute('aria-expanded',!m);$('#vhide span').textContent=m?T('Show','Mostrar'):T('Hide','Ocultar')};
+ $('#vhide').onclick=()=>{const c=$('#vgctrl'),m=c.classList.toggle('min');$('#vg').classList.toggle('uihid',m);if(m)$('#vgc').classList.remove('show');$('#vhide').setAttribute('aria-expanded',!m);$('#vhide span').textContent=m?T('Show','Mostrar'):T('Hide','Ocultar')};
  const big=new WMap($('#vgm'),{pick:true,interactive:true,pin:VS.pin,onPin:p=>{VS.pin=p;varSync()},onMove:()=>{VS.moved=true;$('#vgc').classList.remove('show')}});
  const mini=new WMap($('#vthm'),{nolabels:true,pin:VS.pin});
  VAR_VIEW.push(pp,big,mini);VS.pp=pp;VS.big=big;VS.mini=mini;
